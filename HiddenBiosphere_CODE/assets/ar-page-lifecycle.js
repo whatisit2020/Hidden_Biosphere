@@ -81,4 +81,10 @@
       window.location.reload();
     }
   });
+  const navigation = performance.getEntriesByType("navigation")[0];
+  const isReload = navigation && navigation.type === "reload";
+
+  if (!isReload) {
+    window.location.reload();
+  }
 })();
