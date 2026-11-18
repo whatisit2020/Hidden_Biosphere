@@ -1,0 +1,366 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+body {
+  background: #fff;
+}
+
+/* 메인 페이지 */
+.decomposition-page {
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(20px, 5vw, 32px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* 뒤로가기 버튼 */
+.back {
+  display: block;
+  width: clamp(30px, 5vw, 50px);
+  margin-bottom: clamp(24px, 5vw, 40px);
+  text-decoration: none;
+}
+
+.back img {
+  width: 100%;
+  height: auto;
+}
+
+/* 상단 설명 상자 */
+.stage-info {
+  width: 100%;
+  padding: clamp(18px, 4vw, 30px);
+  color: #fff;
+  background: #155b43;
+  border-radius: clamp(20px, 5vw, 34px);
+}
+
+.stage-info h1 {
+  margin-bottom: clamp(8px, 2vw, 14px);
+  font-size: clamp(1rem, 3.5vw, 1.8rem);
+  line-height: 1.4;
+}
+
+.stage-info p {
+  font-size: clamp(0.8rem, 2.7vw, 1.25rem);
+  line-height: 1.7;
+}
+
+/* 풍화 콘텐츠 */
+#weathering-content {
+  display: block;
+  width: 100%;
+  padding-top: clamp(28px, 6vw, 48px);
+  padding-bottom: clamp(32px, 6vw, 48px);
+}
+
+/* 풍화 섹션 */
+.weathering-section {
+  margin-bottom: clamp(40px, 8vw, 64px);
+}
+
+.weathering-section h2 {
+  color: #008a43;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  padding-bottom: 10px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #008a43;
+}
+
+.weathering-description {
+  font-size: clamp(0.9rem, 2.7vw, 1.1rem);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+/* 풍화 종류별 상자 */
+.weathering-box {
+  width: 100%;
+  padding: clamp(20px, 4vw, 30px);
+  margin-bottom: 16px;
+  background: #f4f7f5;
+  border: 1px solid #d8e5dd;
+  border-radius: 16px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.weathering-box h3 {
+  color: #155b43;
+  font-size: clamp(1.05rem, 3vw, 1.4rem);
+  margin-bottom: 10px;
+}
+
+.weathering-box p {
+  font-size: clamp(0.85rem, 2.7vw, 1.05rem);
+  line-height: 1.8;
+}
+
+.weathering-box:hover {
+  background: #eaf3ed;
+  border-color: #155b43;
+  transform: translateY(-2px);
+}
+
+.weathering-box:active {
+  transform: scale(0.99);
+}
+
+.weathering-box:focus-visible {
+  outline: 3px solid #008a43;
+  outline-offset: 3px;
+}
+
+/* 하단 주석 */
+.weathering-note {
+  color: #666;
+  font-size: clamp(0.75rem, 2.3vw, 0.95rem);
+  line-height: 1.7;
+}
+
+/* 팝업 활성화 시 배경 스크롤 방지 */
+body.modal-open {
+  overflow: hidden;
+}
+
+.weathering-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.weathering-modal.is-open {
+  display: flex;
+}
+
+/* 팝업 배경 */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+#modal-overview {
+  margin-bottom: 24px;
+  color:#333;
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  line-height: 1.8;
+}
+
+/* 팝업 본체 */
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 760px);
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 4vw, 36px);
+  background: #fff;
+  border-radius: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* 닫기 버튼 */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #155b43;
+  font-family: inherit;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  opacity: 0.65;
+}
+
+.modal-close:focus-visible,
+.modal-controller button:focus-visible {
+  outline: 3px solid #008a43;
+  outline-offset: 3px;
+}
+
+/* 팝업 제목 */
+#modal-title {
+  padding-right: 44px;
+  margin-bottom: 20px;
+  color: #155b43;
+  font-size: clamp(1.25rem, 3.5vw, 1.8rem);
+  line-height: 1.5;
+}
+
+/* 일러스트 영역 */
+.modal-visual {
+  width: 100%;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: #f4f7f5;
+  border-radius: 16px;
+}
+
+.modal-visual img {
+  width: 100%;
+  max-width: 480px;
+  max-height: 38dvh;
+  object-fit: contain;
+}
+
+/* 단계 설명 */
+.modal-content {
+  min-height: 140px;
+}
+
+#modal-step {
+  display: block;
+  margin-bottom: 8px;
+  color: #008a43;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#modal-step-title {
+  margin-bottom: 10px;
+  color: #155b43;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  line-height: 1.5;
+}
+
+#modal-description {
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  line-height: 1.8;
+}
+
+/* 팝업 슬라이드 조작 */
+.modal-controller {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-controller button {
+  min-width: 86px;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: #155b43;
+  border: 1px solid #155b43;
+  border-radius: 10px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-controller button:hover:not(:disabled) {
+  background: #008a43;
+  border-color: #008a43;
+}
+
+.modal-controller button:disabled {
+  background: #e7ebe8;
+  border-color: #e7ebe8;
+  color: #9aa59e;
+  cursor: default;
+}
+
+/* 단계 표시 점 */
+.modal-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.modal-dot {
+  width: 8px;
+  height: 8px;
+  background: #cddbd2;
+  border-radius: 999px;
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
+}
+
+.modal-dot.active {
+  width: 22px;
+  background: #155b43;
+}
+
+/* 스마트폰 대응 */
+@media (max-width: 600px) {
+  .weathering-box {
+    border-radius: 12px;
+  }
+  .weathering-section h2 {
+    margin-bottom: 18px;
+  }
+  .weathering-modal {
+    padding: 12px;
+  }
+  .modal-panel {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    padding: 20px;
+    border-radius: 18px;
+  }
+  .modal-visual {
+    min-height: 180px;
+    margin-bottom: 20px;
+  }
+  .modal-visual img {
+    max-height: 30dvh;
+  }
+  .modal-content {
+    min-height: 130px;
+  }
+  .modal-controller button {
+    min-width: 70px;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* 움직임 감소 설정 */
+@media (prefers-reduced-motion: reduce) {
+  .weathering-box,
+  .modal-dot {
+    transition: none;
+  }
+}

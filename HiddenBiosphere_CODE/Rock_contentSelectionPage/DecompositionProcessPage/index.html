@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <title>岩石の風化</title>
+</head>
+
+<body>
+  <main class="decomposition-page">
+
+    <!-- 뒤로가기 -->
+    <a href="../index.html" class="back" aria-label="戻る">
+      <img src="../../assets/green_arrowSymbol.svg" alt="">
+    </a>
+
+    <!-- 상단 설명 -->
+    <section class="stage-info">
+      <h1>岩石の風化について</h1>
+      <p>
+        風化とは、地表や地表付近にある岩石が、水、空気、
+        温度変化、生物の活動などによって、徐々に砕かれたり、
+        化学的に変化したりする現象です。
+      </p>
+      <p>
+        風化は、主に物理的風化と化学的風化に分けられます。
+        また、生物の活動による風化は、生物的風化として
+        区別されることもあります。
+      </p>
+    </section>
+
+    <!-- 풍화 종류 -->
+    <div id="weathering-content">
+
+      <!-- 물리적 풍화 -->
+      <section class="weathering-section">
+        <h2>物理的風化</h2>
+
+        <p class="weathering-description">
+          物理的風化とは、岩石を構成する鉱物の主な化学組成を
+          変えずに、岩石が割れたり、細かく砕けたりする作用です。
+          温度や水分の変化、圧力などが関わっています。
+        </p>
+
+        <div class="weathering-box" data-weathering="freeze-thaw">
+          <h3>凍結融解による風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="salt">
+          <h3>塩類風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="thermal">
+          <h3>温度変化による風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="unloading">
+          <h3>除荷による剥離</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="wet-dry">
+          <h3>乾湿風化</h3>
+        </div>
+      </section>
+
+      <!-- 화학적 풍화 -->
+      <section class="weathering-section">
+        <h2>化学的風化</h2>
+
+        <p class="weathering-description">
+          化学的風化とは、水や酸素などとの化学反応によって、
+          岩石を構成する鉱物が溶解したり、
+          別の鉱物へと変化したりする作用です。
+          岩石の種類や周囲の環境によって、
+          起こりやすい反応は異なります。
+        </p>
+
+        <div class="weathering-box" data-weathering="oxidation">
+          <h3>酸化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="reduction">
+          <h3>還元</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="hydrolysis">
+          <h3>加水分解</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="dissolution">
+          <h3>溶解</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="hydration">
+          <h3>水和</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="carbonation">
+          <h3>炭酸による溶解</h3>
+        </div>
+      </section>
+
+      <!-- 생물학적 풍화 -->
+      <section class="weathering-section">
+        <h2>生物的風化</h2>
+
+        <p class="weathering-description">
+          生物的風化とは、植物や微生物、地衣類、
+          動物などの活動によって、岩石の破砕や
+          鉱物の化学的な変化が促進される作用です。
+          物理的風化と化学的風化の両方に関わっています。
+        </p>
+
+        <div class="weathering-box" data-weathering="roots">
+          <h3>植物の根による風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="lichen">
+          <h3>地衣類による風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="microbes">
+          <h3>微生物による風化</h3>
+        </div>
+
+        <div class="weathering-box" data-weathering="animals">
+          <h3>動物の活動による風化</h3>
+        </div>
+      </section>
+
+      <!-- 하단 주석 -->
+      <p class="weathering-note">
+        ※ 風化は主に物理的風化と化学的風化に分けられます。
+        生物的風化は、生物の活動に着目した分類であり、
+        物理的・化学的風化と重なる場合があります。
+        また、これらの作用は互いに影響し合いながら進行します。
+      </p>
+
+    </div>
+  </main>
+
+  <!-- 중앙 팝업 -->
+  <div
+    id="weathering-modal"
+    class="weathering-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    aria-hidden="true"
+  >
+    <div class="modal-overlay"></div>
+
+    <div class="modal-panel" tabindex="-1">
+
+      <button
+        type="button"
+        class="modal-close"
+        aria-label="閉じる"
+      >×</button>
+
+      <h2 id="modal-title"></h2>
+      <p id="modal-overview"></p>
+
+      <div class="modal-visual">
+        <img id="modal-image" alt="">
+      </div>
+
+      <div class="modal-content" aria-live="polite">
+        <span id="modal-step"></span>
+        <h3 id="modal-step-title"></h3>
+        <p id="modal-description"></p>
+      </div>
+
+      <div class="modal-controller">
+        <button type="button" id="modal-prev">戻る</button>
+        <div class="modal-dots" id="modal-dots"></div>
+        <button type="button" id="modal-next">次へ</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

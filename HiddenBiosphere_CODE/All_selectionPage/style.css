@@ -1,0 +1,329 @@
+
+/* smartphone */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+.content {
+  margin: 0 auto;
+  padding-top: clamp(16px, 6vh, 64px);
+}
+
+header {
+  width: 100%;
+  background: linear-gradient(to bottom, #005132, #00382B);
+}
+
+.header-inner {
+  width: 100%;
+  padding: 29px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 160px;
+  height: auto;
+}
+
+.menu img {
+  width: 38px;
+  height: auto;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.habitat-card {
+  width: 100%;
+  max-width: 354px;
+  position: relative;
+  display: block;
+  margin: 0 auto 29px;
+}
+
+.habitat-card img {
+  width: 100%;
+  display: block;
+}
+
+.card-text {
+  position: absolute;
+  left: 8%;
+  top: 12%;
+  color: white;
+}
+
+.card-text h1 {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+}
+
+.card-text p {
+  margin-top: 4px;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+}
+
+/* doc list */
+.doc_list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transform: translateY(40px);
+}
+
+.doc_list_link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 6px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.doc_list_icon {
+  display: block;
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+}
+
+.doc_list_link p {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* 참고문헌 모달 */
+body.references-open {
+  overflow: hidden;
+}
+
+.references-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.references-modal.is-open {
+  display: flex;
+}
+
+.references-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.references-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 720px);
+  max-height: calc(100dvh - 32px);
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.references-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e0e8e2;
+}
+
+.references-header h2 {
+  color: #155b43;
+  font-size: clamp(1.15rem, 3.5vw, 1.5rem);
+  line-height: 1.4;
+}
+
+.references-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  color: #155b43;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.references-close:hover {
+  opacity: 0.65;
+}
+
+.references-list {
+  padding: 8px 24px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.reference-item {
+  padding: 20px 0;
+  border-bottom: 1px solid #e5eae6;
+  overflow-wrap: anywhere;
+}
+
+.reference-item:last-child {
+  border-bottom: none;
+}
+
+.reference-number {
+  display: block;
+  margin-bottom: 8px;
+  color: #008a43;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.reference-title {
+  color: #263b30;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.reference-meta {
+  margin-top: 6px;
+  color: #626e66;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.reference-url {
+  display: inline-block;
+  margin-top: 8px;
+  color: #007c51;
+  font-size: 0.83rem;
+  line-height: 1.6;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.reference-url:hover {
+  color: #005132;
+}
+
+.references-empty {
+  padding: 28px 0;
+  color: #626e66;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.doc_list_link:focus-visible,
+.references-close:focus-visible,
+.reference-url:focus-visible {
+  outline: 3px solid #008a43;
+  outline-offset: 3px;
+}
+
+/* 스마트폰 */
+@media (max-width: 600px) {
+  .references-panel {
+    border-radius: 16px;
+  }
+
+  .references-header {
+    padding: 18px;
+  }
+
+  .references-list {
+    padding: 4px 18px 18px;
+  }
+
+  .reference-item {
+    padding: 16px 0;
+  }
+}
+
+/* iPad */
+@media (min-width: 768px) {
+  .content {
+    padding-top: clamp(60px, 8vh, 110px);
+    padding-bottom: 80px;
+  }
+
+  .habitat-card {
+    max-width: 500px;
+    margin-bottom: 36px;
+  }
+
+  .card-text {
+    left: 42px;
+    top: 38px;
+  }
+
+  .card-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .card-text p {
+    font-size: 1.15rem;
+  }
+
+  .header-inner {
+    padding: 24px 48px;
+  }
+
+  .logo {
+    width: 190px;
+  }
+
+  .doc_list_icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .doc_list_link {
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .doc_list_link p {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .doc_list {
+    transform: translateY(40px);
+  }
+}
