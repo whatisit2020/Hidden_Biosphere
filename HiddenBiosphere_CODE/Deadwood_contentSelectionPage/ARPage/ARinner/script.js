@@ -1157,9 +1157,7 @@ function renderPagination(
 }
 
 /*개별 생물 상세 */
-function openSpeciesModal(
-  speciesItem
-) {
+function openSpeciesModal(speciesItem) {
   if (
     !speciesItem ||
     !speciesModal ||
@@ -1171,21 +1169,52 @@ function openSpeciesModal(
   ) {
     return;
   }
+
   speciesImage.src =
     speciesItem.image;
+
   speciesImage.alt =
     speciesItem.name;
+
   speciesCategory.textContent =
     speciesItem.category;
+
   speciesName.textContent =
     speciesItem.name;
+
   speciesScientificName.textContent =
     speciesItem.scientificName;
+
+  /*위도 표시 - 바위 위와 동일한 구조*/
+  const oldLatitude =
+    document.querySelector("#species-latitude");
+
+  if (oldLatitude) {
+    oldLatitude.remove();
+  }
+
+  const latitude =
+    document.createElement("p");
+
+  latitude.id = "species-latitude";
+  latitude.className = "species-latitude";
+
+  latitude.textContent = speciesItem.latitude
+    ? `生息緯度：${speciesItem.latitude}`
+    : "生息緯度：資料未登録";
+
+  speciesScientificName.insertAdjacentElement(
+    "afterend",
+    latitude
+  );
+
   speciesDescription.textContent =
     speciesItem.description;
+
   speciesModal.classList.add(
     "is-open"
   );
+
   speciesModal.setAttribute(
     "aria-hidden",
     "false"
@@ -1209,7 +1238,6 @@ function closeSpeciesModal() {
 }
 
 /* AR 히트박스 클릭*/
-
 function bindClickEvents() {
   document
     .querySelectorAll(

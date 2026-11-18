@@ -556,6 +556,15 @@ canvas{
   line-height: 1.2;
 }
 
+/*고사목 생물 서식 위도*/
+.species-latitude {
+  margin: 0 0 18px;
+  color: #435d54;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
 .species-scientific-name{
   margin:
     0
