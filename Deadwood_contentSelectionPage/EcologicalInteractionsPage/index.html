@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Ecological Interactions</title>
+</head>
+<body>
+  <main class="relationship-page">
+    <a href="../index.html" class="back">
+      <img src="../../assets/green_arrowSymbol.svg" alt="Back">
+    </a>
+
+    <section class="relationship-map">
+    <!--Lines-->
+      <svg class="relationship-lines" aria-hidden="true">
+        <line id="deadwood-to-funguses" class="relationship-line"></line>
+        <line id="deadwood-to-insects" class="relationship-line"></line>
+        <line id="deadwood-to-bryophyte" class="relationship-line"></line>
+        <line id="deadwood-to-microorganisms" class="relationship-line"></line>
+      </svg>
+    <!-- Thumbnails-->
+      <div class="thumbnails deadwood">
+        <img src="../../assets/Deadwood/EcologicalInteractions/Deadwood_EcologicalInteractions.png" alt="Deadwood">
+        <h1>倒木</h1>
+        <p>とうぼく</p>
+      </div>
+      <div class="thumbnails funguses">
+        <img src="../../assets/Deadwood/EcologicalInteractions/Funguses_EcologicalInteractions.png" alt="Funguses">
+        <h1>菌類</h1>
+        <p>きんるい</p>
+      </div>
+      <div class="thumbnails insects">
+        <img src="../../assets/Deadwood/EcologicalInteractions/Insects_EcologicalInteractions.png" alt="Insects">
+        <h1>昆虫</h1>
+        <p>こんちゅう</p>
+      </div>
+      <div class="thumbnails bryophyte">
+        <img src="../../assets/Deadwood/EcologicalInteractions/Bryophyte_EcologicalInteractions.png" alt="Bryophyte">
+        <h1>蘚苔類</h1>
+        <p>せんたいるい</p>
+      </div>
+      <div class="thumbnails microorganisms">
+        <img src="../../assets/Deadwood/EcologicalInteractions/Microorganism_EcologicalInteractions.png" alt="microoraganism">
+        <h1>微生物</h1>
+        <p>びせいぶつ</p>
+      </div>
+    </section>
+
+    <!-- Information popup -->
+    <div class="info-popup" id="info-popup" aria-hidden="true">
+      <div class="info-popup-card">
+        <button
+          class="info-popup-close"
+          id="info-popup-close"
+          type="button"
+          aria-label="閉じる"
+        >
+          ×
+        </button>
+
+        <p class="info-popup-kana" id="info-popup-kana"></p>
+        <h2 class="info-popup-title" id="info-popup-title"></h2>
+        <p class="info-popup-description" id="info-popup-description"></p>
+      </div>
+    </div>
+  </main>
+  <script src="./script.js"></script>
+</body>
+</html>

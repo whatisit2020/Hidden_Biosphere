@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no"
+  >
+
+  <title>Hidden Biosphere AR</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+
+  <!-- AR.js NFT -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+  <link rel="stylesheet" href="./style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
+
+<body>
+
+  <!-- AR 데이터 로딩 화면 -->
+  <div class="arjs-loader">
+    <div>Loading AR data...</div>
+  </div>
+
+  <!-- 뒤로가기 -->
+  <a
+    href="../index.html"
+    class="back"
+    aria-label="戻る"
+  >
+    <img
+      src="../../../assets/white_arrowSymbol.svg"
+      alt=""
+    >
+  </a>
+
+  <!-- AR 장면 -->
+  <a-scene
+    vr-mode-ui="enabled: false"
+    renderer="
+      logarithmicDepthBuffer: true;
+      precision: medium;
+    "
+    embedded
+    arjs="
+      trackingMethod: best;
+      sourceType: webcam;
+      debugUIEnabled: false;
+    "
+  >
+
+    <!-- 3D 모델 사전 로딩 -->
+    <a-assets>
+      <a-asset-item
+        id="rock_under-model"
+        src="../../../assets/Rock/3D/rock_under_ground.glb"
+      ></a-asset-item>
+
+      <a-asset-item
+        id="noraegi-model"
+        src="../../../assets/Rock/3D/noraegi.glb"
+      ></a-asset-item>
+
+      <a-asset-item
+        id="woodLouse-model"
+        src="../../../assets/Rock/3D/woodLouse.glb"
+      ></a-asset-item>
+
+      <a-asset-item
+        id="ddak-model"
+        src="../../../assets/Rock/3D/ddak.glb"
+      ></a-asset-item>
+    </a-assets>
+
+    <!-- AR 카메라 -->
+    <a-entity
+      camera
+      look-controls="enabled: false"
+      ar-touch-raycaster
+    ></a-entity>
+
+    <!-- NFT 이미지 마커 -->
+    <a-nft
+      id="rock-marker"
+      type="nft"
+      url="../../../assets/Rock/ImageTrackingAnchor/nft/Rock"
+      emitevents="true"
+      smooth="true"
+      smoothCount="20"
+      smoothTolerance="0.01"
+      smoothThreshold="10"
+    >
+
+      
+    <!-- 전체 모델 조작 루트 -->
+    <a-entity
+      id="scene-root"
+      position="100 50 -200"
+      rotation="0 180 0"
+      scale="40 40 40"
+    >
+
+      <!-- 바위 밑 및 지면 -->
+      <a-entity
+        id="rock-under-object"
+        gltf-model="#rock_under-model"
+      ></a-entity>
+
+      <!-- 노래기 -->
+      <a-entity
+        id="noraegi-object"
+        gltf-model="#noraegi-model"
+      ></a-entity>
+
+      <a-box
+        id="noraegi-hitbox"
+        class="clickable"
+        data-part="noraegi"
+        position="0.4 0.9 -0.3"
+        scale="0.5 0.5 0.5"
+        material="
+          transparent: true;
+          opacity: 0.4;
+          color: green;
+          depthWrite: false;
+        "
+      ></a-box>
+
+      <!-- 쥐며느리류 -->
+      <a-entity
+        id="woodLouse-object"
+        gltf-model="#woodLouse-model"
+      ></a-entity>
+
+      <a-box
+        id="woodLouse-hitbox"
+        class="clickable"
+        data-part="woodLouse"
+        position="-1.2 0.5 -0.3"
+        scale="0.5 0.5 0.5"
+        material="
+          transparent: true;
+          opacity: 0.4;
+          color: red;
+          depthWrite: false;
+        "
+      ></a-box>
+
+      <!-- 딱정벌레 -->
+      <a-entity
+        id="ddak-object"
+        gltf-model="#ddak-model"
+      ></a-entity>
+
+      <a-box
+        id="ddak-hitbox"
+        class="clickable"
+        data-part="ddak"
+        position="-1.2 0.7 -0.3"
+        scale="0.5 0.5 0.5"
+        material="
+          transparent: true;
+          opacity: 0.4;
+          color: blue;
+          depthWrite: false;
+        "
+      ></a-box>
+
+</a-entity>
+
+    </a-nft>
+
+  </a-scene>
+
+  <!-- 중앙 터치 안내 가이드 -->
+  <div class="touch-guide" aria-hidden="true">
+    <div class="touch-guide-frame">
+      <span class="touch-guide-corner top-left"></span>
+      <span class="touch-guide-corner top-right"></span>
+      <span class="touch-guide-corner bottom-left"></span>
+      <span class="touch-guide-corner bottom-right"></span>
+
+      <span class="touch-guide-center"></span>
+    </div>
+
+    <p class="touch-guide-text">
+      見たい対象を中央に合わせてタップしてください
+    </p>
+  </div>
+
+  <!-- 오른쪽 위 도감 아이콘 -->
+  <button
+    id="encyclopedia-button"
+    class="encyclopedia-button"
+    type="button"
+    aria-label="生物図鑑を開く"
+    aria-hidden="true"
+  >
+    <img
+      src="../../../assets/Deadwood/EncyclopediaPage/encyclopedia.png"
+      alt="encyclopedia"
+    >
+  </button>
+
+  <!-- 간단 설명창 -->
+  <div
+    id="info-panel"
+    class="info-panel"
+    aria-hidden="true"
+  >
+    <div class="info-card">
+      <button
+        id="info-close"
+        class="info-close"
+        type="button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+
+      <p
+        id="info-category"
+        class="info-category"
+      ></p>
+
+      <h2
+        id="info-title"
+        class="info-title"
+      ></h2>
+
+      <p
+        id="info-description"
+        class="info-description"
+      ></p>
+    </div>
+  </div>
+
+  <!-- 도감 팝업 -->
+  <div
+    id="encyclopedia-modal"
+    class="encyclopedia-modal"
+    aria-hidden="true"
+  >
+    <section
+      class="encyclopedia-book"
+      aria-labelledby="encyclopedia-title"
+    >
+      <button
+        id="encyclopedia-close"
+        class="encyclopedia-close"
+        type="button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+
+      <!-- 도감 상단 -->
+      <header class="encyclopedia-header">
+        <div class="encyclopedia-heading">
+          <p id="encyclopedia-subtitle">
+            微小生態系の
+          </p>
+
+          <h2 id="encyclopedia-title">
+            生物
+          </h2>
+        </div>
+
+        <!-- 기존 도감 장식: 추후 Rock용 이미지로 변경 가능 -->
+        <div
+          class="encyclopedia-symbol noraegi"
+          aria-hidden="true"
+        >
+          <img
+            src="../../../assets/Rock/EncyclopediaPage/noraegi.svg"
+            alt=""
+          >
+        </div>
+
+        <div
+          class="encyclopedia-symbol woodLouse"
+          aria-hidden="true"
+        >
+          <img
+            src="../../../assets/Rock/EncyclopediaPage/woodLouse.svg"
+            alt=""
+          >
+        </div>
+
+        <div
+          class="encyclopedia-symbol ddak"
+          aria-hidden="true"
+        >
+          <img
+            src="../../../assets/Rock/EncyclopediaPage/ddak.svg"
+            alt=""
+          >
+        </div>
+      </header>
+
+      <!-- JavaScript가 생물 카드를 생성 -->
+      <div
+        id="encyclopedia-grid"
+        class="encyclopedia-grid"
+      ></div>
+
+      <!-- JavaScript가 페이지 점을 생성 -->
+      <div
+        id="encyclopedia-pagination"
+        class="encyclopedia-pagination"
+        aria-label="図鑑ページ"
+      ></div>
+    </section>
+  </div>
+
+  <!-- 개별 생물 상세 팝업 -->
+  <div
+    id="species-modal"
+    class="species-modal"
+    aria-hidden="true"
+  >
+    <article class="species-card">
+      <button
+        id="species-close"
+        class="species-close"
+        type="button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+
+      <img
+        id="species-image"
+        class="species-image"
+        src=""
+        alt=""
+      >
+
+      <p
+        id="species-category"
+        class="species-category"
+      ></p>
+
+      <h2
+        id="species-name"
+        class="species-name"
+      ></h2>
+
+      <p
+        id="species-scientific-name"
+        class="species-scientific-name"
+      ></p>
+
+      <p
+        id="species-description"
+        class="species-description"
+      ></p>
+    </article>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

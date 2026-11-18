@@ -1,0 +1,148 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body{
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+img{
+  display: block;
+  max-width: 100%;
+}
+
+body{
+  background: #fff;
+}
+
+.decomposition-page{
+  width: 100%;
+  min-height: 100dvh;
+  padding: clamp(20px, 5vw, 32px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* 뒤로가기 버튼 */
+.back{
+  display: block;
+  width: clamp(30px, 5vw, 50px);
+  margin-bottom: clamp(24px, 5vw, 40px);
+  text-decoration: none;
+}
+
+.back img{
+  width: 100%;
+  height: auto;
+}
+
+/* 설명 상자 */
+.stage-info{
+  width: 100%;
+  padding: clamp(18px, 4vw, 30px);
+
+  color: #fff;
+  background: #155b43;
+  border-radius: clamp(20px, 5vw, 34px);
+}
+
+.stage-info h1{
+  margin-bottom: clamp(8px, 2vw, 14px);
+  font-size: clamp(1rem, 3.5vw, 1.8rem);
+  line-height: 1.4;
+}
+
+.stage-info p{
+  font-size: clamp(0.8rem, 2.7vw, 1.25rem);
+  line-height: 1.7;
+}
+
+/* 단계 이미지 */
+.stage-visual{
+  flex: 1;
+  min-height: clamp(240px, 38vh, 460px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-visual img{
+  width: clamp(240px, 85vw, 600px);
+  height: auto;
+}
+
+/* 슬라이더 영역 */
+.stage-controller{
+  width: 100%;
+  padding-bottom: clamp(20px, 5vw, 40px);
+}
+
+.stage-numbers{
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0 4px 8px;
+
+  color: #155b43;
+  font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+  font-weight: 700;
+}
+
+#stage-slider{
+  width: 100%;
+  height: 28px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Chrome, Safari, Edge의 선 */
+#stage-slider::-webkit-slider-runnable-track{
+  width: 100%;
+  height: clamp(10px, 2vw, 14px);
+
+  background: #155b43;
+  border-radius: 999px;
+}
+
+/* Chrome, Safari, Edge의 손잡이 */
+#stage-slider::-webkit-slider-thumb{
+  width: clamp(22px, 5vw, 32px);
+  height: clamp(22px, 5vw, 32px);
+
+  margin-top: calc(
+    (clamp(10px, 2vw, 14px) - clamp(22px, 5vw, 32px)) / 2
+  );
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: #fff;
+  border: clamp(3px, 0.7vw, 5px) solid #155b43;
+  border-radius: 50%;
+}
+
+/* Firefox의 선 */
+#stage-slider::-moz-range-track{
+  height: clamp(10px, 2vw, 14px);
+  background: #155b43;
+  border-radius: 999px;
+}
+
+/* Firefox의 손잡이 */
+#stage-slider::-moz-range-thumb{
+  width: clamp(22px, 5vw, 32px);
+  height: clamp(22px, 5vw, 32px);
+
+  background: #fff;
+  border: clamp(3px, 0.7vw, 5px) solid #155b43;
+  border-radius: 50%;
+}
