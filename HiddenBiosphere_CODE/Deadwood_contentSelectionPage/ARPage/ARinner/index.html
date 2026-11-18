@@ -371,7 +371,16 @@
   }
 
   log("진단 시작");
+const marker = document.querySelector("#deadwood-marker");
 
+setInterval(() => {
+  if (marker) {
+    log(
+      "NFT 상태: " +
+      (marker.object3D.visible ? "표시 상태" : "비표시 상태")
+    );
+  }
+}, 5000);
   window.addEventListener("arjs-nft-loaded", () => {
     log("NFT 데이터 로딩 완료");
   });
