@@ -679,6 +679,14 @@ function openEncyclopedia() {
 
   encyclopediaSubtitle.textContent = encyclopedia.subtitle;
   encyclopediaTitle.textContent = encyclopedia.title;
+  /* 현재 선택한 생물 그룹의 장식만 표시 */
+  document.querySelectorAll(".encyclopedia-symbol").forEach((symbol) => {
+    symbol.classList.toggle(
+      "is-hidden",
+      !symbol.classList.contains(selectedPart)
+    );
+  });
+
   encyclopediaPage = 0;
   renderEncyclopediaPage();
   encyclopediaModal.classList.add("is-open");
@@ -804,10 +812,32 @@ function openSpeciesModal(speciesItem) {
   speciesCategory.textContent = speciesItem.category;
   speciesName.textContent = speciesItem.name;
   speciesScientificName.textContent = speciesItem.scientificName;
+
+  /* 기존 위도 표시 요소가 있다면 제거 */
+  const oldLatitude = document.querySelector("#species-latitude");
+  if (oldLatitude) {
+    oldLatitude.remove();
+  }
+
+  /* 생물 데이터에서 위도 가져오기 */
+  const latitude = document.createElement("p");
+  latitude.id = "species-latitude";
+  latitude.className = "species-latitude";
+
+  latitude.textContent = speciesItem.latitude
+    ? `生息緯度：${speciesItem.latitude}`
+    : "生息緯度：資料未登録";
+
+  /* 학명 아래에 위도 표시 */
+  speciesScientificName.insertAdjacentElement(
+    "afterend",
+    latitude
+  );
+
   speciesDescription.textContent = speciesItem.description;
-  speciesModal.classList.add("is-open");
-  speciesModal.setAttribute("aria-hidden", "false");
-}
+    speciesModal.classList.add("is-open");
+    speciesModal.setAttribute("aria-hidden", "false");
+  }
 
 function closeSpeciesModal() {
   if (!speciesModal) {

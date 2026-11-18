@@ -1,21 +1,21 @@
 
 /*기본 설정*/
-*{
+* {
   box-sizing: border-box;
 }
 
 html,
-body{
+body {
   overflow: hidden;
   font-family: "Noto Sans JP", sans-serif;
 }
 
-canvas{
+canvas {
   touch-action: none;
 }
 
 /*AR 로딩 화면*/
-.arjs-loader{
+.arjs-loader {
   position: fixed;
   inset: 0;
   z-index: 20000;
@@ -29,7 +29,7 @@ canvas{
 }
 
 /*뒤로가기 버튼*/
-.back{
+.back {
   position: fixed;
   top: max(20px, env(safe-area-inset-top));
   left: max(20px, env(safe-area-inset-left));
@@ -45,18 +45,18 @@ canvas{
   touch-action: manipulation;
 }
 
-.back img{
+.back img {
   display: block;
   width: 58%;
   height: auto;
 }
 
-.back:active{
+.back:active {
   transform: scale(0.94);
 }
 
 /*간단 설명창*/
-.info-panel{
+.info-panel {
   position: fixed;
   inset: 0;
   z-index: 10000;
@@ -64,7 +64,6 @@ canvas{
   justify-content: center;
   align-items: flex-end;
   padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
-  /*카메라 화면을 가리지 않도록 투명 처리*/
   background: transparent;
   opacity: 0;
   visibility: hidden;
@@ -72,15 +71,13 @@ canvas{
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.info-panel.is-open{
+.info-panel.is-open {
   opacity: 1;
   visibility: visible;
-  /*화면 전체가 터치를 막지 않도록 유지*/
-  /*실제 정보 카드만 터치 가능*/
   pointer-events: none;
 }
 
-.info-card{
+.info-card {
   position: relative;
   width: min(100%, 520px);
   max-height: 70dvh;
@@ -91,17 +88,58 @@ canvas{
   border-radius: 24px 24px 16px 16px;
   transform: translateY(30px);
   transition: transform 0.2s ease;
-  /*정보 카드 자체는 터치 가능*/
   pointer-events: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
 }
 
-.info-panel.is-open .info-card{
+.info-panel.is-open .info-card {
   transform: translateY(0);
 }
 
+/*설명창 닫기 버튼*/
+.info-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 56, 43, 0.1);
+  color: #163c31;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.info-close:active {
+  transform: scale(0.94);
+}
+
+/*설명창 텍스트*/
+.info-category {
+  margin: 0 44px 8px 0;
+  color: #527065;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.info-title {
+  margin: 0 44px 14px 0;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.info-description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
 /*오른쪽 위 도감 아이콘*/
-.encyclopedia-button{
+.encyclopedia-button {
   position: fixed;
   top: max(82px, calc(env(safe-area-inset-top) + 68px));
   right: max(18px, env(safe-area-inset-right));
@@ -114,9 +152,7 @@ canvas{
   align-items: center;
   border: 0;
   border-radius: 50%;
-  /*흰색 바탕*/
   background: rgba(255, 255, 255, 0.95);
-  /*카메라 화면 위에서도 구분되도록*/
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
   opacity: 0;
   visibility: hidden;
@@ -129,26 +165,26 @@ canvas{
   touch-action: manipulation;
 }
 
-.encyclopedia-button.is-visible{
+.encyclopedia-button.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translateX(0);
 }
 
-.encyclopedia-button img{
+.encyclopedia-button img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.encyclopedia-button:active{
+.encyclopedia-button:active {
   transform: scale(0.94);
 }
 
 /*도감 팝업 전체 배경*/
-.encyclopedia-modal{
+.encyclopedia-modal {
   position: fixed;
   inset: 0;
   z-index: 11000;
@@ -166,14 +202,14 @@ canvas{
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.encyclopedia-modal.is-open{
+.encyclopedia-modal.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
 /*도감 본체*/
-.encyclopedia-book{
+.encyclopedia-book {
   position: relative;
   width: min(94vw, 430px);
   height: min(92dvh, 680px);
@@ -189,12 +225,12 @@ canvas{
   transition: transform 0.2s ease;
 }
 
-.encyclopedia-modal.is-open .encyclopedia-book{
+.encyclopedia-modal.is-open .encyclopedia-book {
   transform: scale(1);
 }
 
 /*도감 닫기 버튼*/
-.encyclopedia-close{
+.encyclopedia-close {
   position: absolute;
   top: 0;
   left: 0;
@@ -215,28 +251,38 @@ canvas{
   touch-action: manipulation;
 }
 
-.encyclopedia-close:active{
+.encyclopedia-close:active {
   opacity: 0.75;
 }
 
+
+
 /*도감 상단 제목*/
-.encyclopedia-header{
+.encyclopedia-header {
+  position: relative;
+  flex: 0 0 auto;
   min-height: 150px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
-  gap: 10px;
   margin-bottom: 20px;
 }
 
-.encyclopedia-heading{
+/*도감 제목 영역*/
+.encyclopedia-heading {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
   display: flex;
   align-items: flex-end;
   gap: 5px;
   margin-left: 10px;
+  max-width: 100%;
 }
 
-.encyclopedia-heading p{
+/*도감 작은 제목*/
+.encyclopedia-heading p {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 18px;
   font-weight: 700;
@@ -244,34 +290,63 @@ canvas{
   white-space: pre-line;
 }
 
-.encyclopedia-heading h2{
+/*도감 큰 제목*/
+.encyclopedia-heading h2 {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 42px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
 }
 
-/*도감 나무 아이콘*/
-.encyclopedia-symbol{
-  flex: 0 0 160px;
-  width: 160px;
+/*도감 상단 생물 장식*/
+.encyclopedia-symbol {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 140px;
   height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
-.encyclopedia-symbol img{
+/*장식 이미지 기본 설정*/
+.encyclopedia-symbol img {
   display: block;
-  width: 160px;
+  width: 150px;
   height: auto;
   max-width: none;
   object-fit: contain;
-  transform: translateY(20px) scale(1.1);
+  flex-shrink: 0;
 }
 
+/*선택되지 않은 장식 숨김*/
+.encyclopedia-symbol.is-hidden {
+  display: none;
+}
+
+/*바위 밑: 노래기*/
+.encyclopedia-symbol.noraegi img {
+  transform: translate(0px, 20px) scale(1.1);
+}
+
+/*바위 밑: 쥐며느리류*/
+.encyclopedia-symbol.woodLouse img {
+  transform: translate(0px, 20px) scale(1.1);
+}
+
+/*바위 밑: 딱정벌레*/
+.encyclopedia-symbol.ddak img {
+  transform: translate(0px, 20px) scale(1.1);
+}
+
+
 /*도감 생물 카드 2×2*/
-.encyclopedia-grid{
+.encyclopedia-grid {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -280,7 +355,7 @@ canvas{
   min-height: 0;
 }
 
-.encyclopedia-species-card{
+.encyclopedia-species-card {
   min-width: 0;
   min-height: 0;
   padding: 9px 10px 12px;
@@ -298,11 +373,11 @@ canvas{
   touch-action: manipulation;
 }
 
-.encyclopedia-species-card:active{
+.encyclopedia-species-card:active {
   transform: scale(0.97);
 }
 
-.encyclopedia-species-image{
+.encyclopedia-species-image {
   flex: 1;
   width: 100%;
   min-height: 0;
@@ -310,14 +385,14 @@ canvas{
   object-fit: contain;
 }
 
-.encyclopedia-species-name{
+.encyclopedia-species-name {
   margin: 3px 7px 0;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.15;
 }
 
-.encyclopedia-species-scientific{
+.encyclopedia-species-scientific {
   margin: 2px 7px 7px;
   font-size: 10.5px;
   line-height: 1.13;
@@ -325,7 +400,7 @@ canvas{
 }
 
 /*도감 페이지 점*/
-.encyclopedia-pagination{
+.encyclopedia-pagination {
   min-height: 31px;
   display: flex;
   justify-content: center;
@@ -334,7 +409,7 @@ canvas{
   padding-top: 16px;
 }
 
-.encyclopedia-page-dot{
+.encyclopedia-page-dot {
   width: 10px;
   height: 10px;
   padding: 0;
@@ -345,14 +420,14 @@ canvas{
   touch-action: manipulation;
 }
 
-.encyclopedia-page-dot.is-active{
+.encyclopedia-page-dot.is-active {
   width: 14px;
   height: 14px;
   background: #fff;
 }
 
 /*개별 생물 상세 팝업*/
-.species-modal{
+.species-modal {
   position: fixed;
   inset: 0;
   z-index: 12000;
@@ -370,13 +445,13 @@ canvas{
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.species-modal.is-open{
+.species-modal.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-.species-card{
+.species-card {
   position: relative;
   width: min(100%, 390px);
   max-height: 82dvh;
@@ -390,11 +465,11 @@ canvas{
   transition: transform 0.2s ease;
 }
 
-.species-modal.is-open .species-card{
+.species-modal.is-open .species-card {
   transform: scale(1);
 }
 
-.species-close{
+.species-close {
   position: absolute;
   top: 14px;
   right: 14px;
@@ -409,11 +484,11 @@ canvas{
   touch-action: manipulation;
 }
 
-.species-close:active{
+.species-close:active {
   transform: scale(0.94);
 }
 
-.species-image{
+.species-image {
   width: 100%;
   height: 190px;
   display: block;
@@ -421,7 +496,7 @@ canvas{
   object-fit: contain;
 }
 
-.species-category{
+.species-category {
   margin: 0 44px 6px 0;
   color: #527065;
   font-size: 12px;
@@ -429,13 +504,13 @@ canvas{
   letter-spacing: 0.08em;
 }
 
-.species-name{
+.species-name {
   margin: 0 44px 4px 0;
   font-size: 28px;
   line-height: 1.2;
 }
 
-.species-scientific-name{
+.species-scientific-name {
   margin: 0 0 20px;
   color: #435d54;
   font-size: 13px;
@@ -443,7 +518,16 @@ canvas{
   line-height: 1.4;
 }
 
-.species-description{
+/*생물 서식 위도*/
+.species-latitude {
+  margin: 0 0 18px;
+  color: #435d54;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.species-description {
   margin: 0;
   font-size: 15px;
   line-height: 1.75;
@@ -451,69 +535,71 @@ canvas{
 }
 
 /*작은 스마트폰 대응*/
-@media screen and (max-width: 380px){
-  .encyclopedia-book{
+@media screen and (max-width: 380px) {
+  .encyclopedia-book {
     width: 96vw;
     height: 94dvh;
     padding: 50px 17px 18px;
   }
 
-  .encyclopedia-header{
+  .encyclopedia-header {
     min-height: 132px;
     margin-bottom: 15px;
   }
 
-  .encyclopedia-heading p{
+  .encyclopedia-heading p {
     font-size: 17px;
   }
 
-  .encyclopedia-heading h2{
-    margin: 0;
+  .encyclopedia-heading h2 {
     font-size: 36px;
   }
 
-  .encyclopedia-symbol{
-    flex-basis: 104px;
+  .encyclopedia-symbol {
     width: 104px;
     height: 123px;
   }
 
-  .encyclopedia-grid{
+  .encyclopedia-symbol img {
+    width: 120px;
+  }
+
+  .encyclopedia-grid {
     gap: 12px 10px;
   }
 
-  .encyclopedia-species-card{
+  .encyclopedia-species-card {
     padding: 7px 8px 10px;
     border-radius: 28px;
   }
 
-  .encyclopedia-species-name{
+  .encyclopedia-species-name {
     font-size: 13px;
   }
 
-  .encyclopedia-species-scientific{
+  .encyclopedia-species-scientific {
     font-size: 9.5px;
   }
 }
 
 /*태블릿 대응*/
-@media screen and (min-width: 768px){
-  .encyclopedia-book{
+@media screen and (min-width: 768px) {
+  .encyclopedia-book {
     width: min(72vw, 480px);
     height: min(84dvh, 720px);
   }
 
-  .info-card{
+  .info-card {
     width: min(72vw, 560px);
   }
 
-  .species-card{
+  .species-card {
     width: min(70vw, 430px);
   }
 }
 
 /*중앙 터치 안내 가이드*/
-.touch-guide{
+.touch-guide {
   position: fixed;
   inset: 0;
   z-index: 8500;
@@ -524,7 +610,7 @@ canvas{
 }
 
 /*중앙 조준 영역*/
-.touch-guide-frame{
+.touch-guide-frame {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -534,7 +620,7 @@ canvas{
 }
 
 /*네 모서리*/
-.touch-guide-corner{
+.touch-guide-corner {
   position: absolute;
   width: 28px;
   height: 28px;
@@ -543,28 +629,32 @@ canvas{
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
 }
 
-.touch-guide-corner.top-left{
+/*왼쪽 위*/
+.touch-guide-corner.top-left {
   top: 0;
   left: 0;
   border-width: 3px 0 0 3px;
   border-radius: 8px 0 0 0;
 }
 
-.touch-guide-corner.top-right{
+/*오른쪽 위*/
+.touch-guide-corner.top-right {
   top: 0;
   right: 0;
   border-width: 3px 3px 0 0;
   border-radius: 0 8px 0 0;
 }
 
-.touch-guide-corner.bottom-left{
+/*왼쪽 아래*/
+.touch-guide-corner.bottom-left {
   bottom: 0;
   left: 0;
   border-width: 0 0 3px 3px;
   border-radius: 0 0 0 8px;
 }
 
-.touch-guide-corner.bottom-right{
+/*오른쪽 아래*/
+.touch-guide-corner.bottom-right {
   right: 0;
   bottom: 0;
   border-width: 0 3px 3px 0;
@@ -572,7 +662,7 @@ canvas{
 }
 
 /*중앙 작은 점*/
-.touch-guide-center{
+.touch-guide-center {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -585,7 +675,7 @@ canvas{
 }
 
 /*안내 문구*/
-.touch-guide-text{
+.touch-guide-text {
   position: absolute;
   left: 50%;
   bottom: calc(30px + env(safe-area-inset-bottom));
@@ -603,7 +693,7 @@ canvas{
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
 }
 
-.touch-guide.is-hidden{
+.touch-guide.is-hidden {
   opacity: 0;
   visibility: hidden;
 }
