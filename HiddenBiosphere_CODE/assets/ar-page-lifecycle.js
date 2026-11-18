@@ -1,7 +1,7 @@
-
 (() => {
   "use strict";
 
+  const RELOAD_FLAG = "hidden-biosphere-ar-reload";
   let leaving = false;
 
   const navigation = performance.getEntriesByType("navigation")[0];
@@ -13,9 +13,7 @@
   }
 
   function stopCamera() {
-    const videos = document.querySelectorAll("video");
-
-    videos.forEach((video) => {
+    document.querySelectorAll("video").forEach((video) => {
       const stream = video.srcObject;
 
       if (stream && typeof stream.getTracks === "function") {
