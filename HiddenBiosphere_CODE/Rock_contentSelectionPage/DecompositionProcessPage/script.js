@@ -460,21 +460,6 @@ function renderModal() {
   modalStep.textContent = `${currentStep + 1} / ${steps.length}`;
   modalStepTitle.textContent = step.title;
   modalDescription.textContent = step.description;
-
-  modalDots.replaceChildren();
-
-  steps.forEach((_, index) => {
-    const dot = document.createElement("span");
-    dot.className = "modal-dot";
-
-    if (index === currentStep) {
-      dot.classList.add("is-active");
-    }
-
-    dot.setAttribute("aria-hidden", "true");
-    modalDots.appendChild(dot);
-  });
-
   modalPrev.disabled = currentStep === 0;
   modalNext.disabled = currentStep === steps.length - 1;
 }
