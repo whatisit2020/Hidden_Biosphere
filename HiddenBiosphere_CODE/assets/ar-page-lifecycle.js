@@ -1,72 +1,96 @@
 (() => {
   "use strict";
 
-  // 1. 현재 켜진 카메라 스트림 강제 종료
+  let isNavigating = false;
+
+  // 1. 카메라 스트림 완전히 종료
   function releaseCamera() {
     const videos = document.querySelectorAll("video");
-    for (let i = 0; i < videos.length; i++) {
+    videos.forEach((video) => {
       try {
-        const video = videos[i];
         const stream = video.srcObject;
         if (stream && typeof stream.getTracks === "function") {
-          const tracks = stream.getTracks();
-          for (let j = 0; j < tracks.length; j++) {
-            tracks[j].stop();
-          }
+          stream.getTracks().forEach((track) => {
+            if (track.readyState !== "ended") {
+              track.stop();
+            }
+          });
         }
         video.pause();
         video.srcObject = null;
         video.remove();
       } catch (e) {}
-    }
+    });
   }
 
-  // 2. 모든 링크 클릭 시 카메라 끄고 강제 페이지 이동
+  // 2. 링크 클릭 시 URL 변경 없이 카메라 정리 후 이동
   document.addEventListener(
     "click",
     (event) => {
       const link = event.target.closest("a");
-      if (!link) return;
+      if (!link || !link.href) return;
 
-      const rawHref = link.getAttribute("href");
-      if (!rawHref || rawHref.startsWith("#") || rawHref.startsWith("javascript:")) {
+      const hrefAttr = link.getAttribute("href") || "";
+      if (
+        link.target === "_blank" ||
+        link.origin !== window.location.origin ||
+        hrefAttr.startsWith("#") ||
+        hrefAttr.startsWith("javascript:")
+      ) {
         return;
       }
 
       event.preventDefault();
       event.stopPropagation();
 
+      if (isNavigating) return;
+      isNavigating = true;
+
       releaseCamera();
 
-      // 다음 페이지가 AR 페이지라면 도착 직후 1회 새로고침하도록 예약 플래그 저장
-      try {
-        sessionStorage.setItem("force_ar_reload", "true");
-      } catch (e) {}
-
+      // URL에 ?t= 등을 붙이지 않고 깨끗한 원래 주소로 이동 (NFT 오류 방지)
+      const cleanUrl = link.href.split("?")[0];
       setTimeout(() => {
-        window.location.href = link.href;
-      }, 200);
+        window.location.href = cleanUrl;
+      }, 250);
     },
     true
   );
 
-  // 3. AR 페이지에 도착했을 때 예약 플래그가 있으면 즉시 1회 새로고침 실행
-  const isARPage = document.querySelector("a-scene") !== null || window.location.pathname.includes("AR");
-  
-  try {
-    if (sessionStorage.getItem("force_ar_reload") === "true") {
-      sessionStorage.removeItem("force_ar_reload");
-      // AR 페이지에 도착한 직후라면 수동 새로고침과 똑같이 1회 리로드
-      if (document.querySelector("a-scene") || window.location.href.includes("Deadwood")) {
+  // 3. AR 페이지 진입 시 실제 카메라 영상이 나오는지 검사 후 1회 자동 새로고침
+  window.addEventListener("load", () => {
+    const scene = document.querySelector("a-scene");
+    if (!scene) return;
+
+    const reloadFlagKey = "ar_force_reload:" + window.location.pathname;
+
+    // 이미 자동 새로고침을 1회 실행했다면 플래그를 지우고 종료 (무한 루프 차단)
+    if (sessionStorage.getItem(reloadFlagKey) === "1") {
+      sessionStorage.removeItem(reloadFlagKey);
+      return;
+    }
+
+    // 1.2초 뒤 실제 카메라 영상이 재생 중인지 확인
+    setTimeout(() => {
+      const arVideo = document.querySelector("#arjs-video, video");
+      const isCameraWorking =
+        arVideo &&
+        arVideo.srcObject &&
+        arVideo.readyState >= 2 &&
+        arVideo.videoWidth > 0;
+
+      // 껍데기 video만 있고 실제 카메라 영상이 안 나오면 1회 자동 새로고침 실행
+      if (!isCameraWorking) {
+        sessionStorage.setItem(reloadFlagKey, "1");
+        releaseCamera();
         window.location.reload();
       }
-    }
-  } catch (e) {}
+    }, 1200);
+  });
 
-  // 4. 브라우저 자체 뒤로가기(캐시 복원) 시에도 무조건 새로고침
+  // 브라우저 뒤로가기(bfcache) 복원 시 새로고침
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
-      releaseCamera();
       window.location.reload();
     }
   });
