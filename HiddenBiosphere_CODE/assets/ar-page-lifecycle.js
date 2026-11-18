@@ -1,38 +1,30 @@
+
 (() => {
   "use strict";
 
   let leaving = false;
 
+  const navigation = performance.getEntriesByType("navigation")[0];
+  const isReload = navigation && navigation.type === "reload";
+
+  if (!isReload) {
+    window.location.reload();
+    return;
+  }
+
   function stopCamera() {
-    const streams = new Set();
+    const videos = document.querySelectorAll("video");
 
-    document.querySelectorAll("video").forEach((video) => {
-      if (video.srcObject instanceof MediaStream) {
-        streams.add(video.srcObject);
+    videos.forEach((video) => {
+      const stream = video.srcObject;
+
+      if (stream && typeof stream.getTracks === "function") {
+        stream.getTracks().forEach((track) => {
+          if (track.readyState !== "ended") {
+            track.stop();
+          }
+        });
       }
-    });
-
-    const scene = document.querySelector("a-scene");
-
-    if (scene && scene.systems && scene.systems.arjs) {
-      const arjsSystem = scene.systems.arjs;
-      const source = arjsSystem._arToolkitSource;
-
-      if (source && source.domElement) {
-        const element = source.domElement;
-
-        if (element.srcObject instanceof MediaStream) {
-          streams.add(element.srcObject);
-        }
-      }
-    }
-
-    streams.forEach((stream) => {
-      stream.getTracks().forEach((track) => {
-        if (track.readyState !== "ended") {
-          track.stop();
-        }
-      });
     });
   }
 
@@ -63,28 +55,16 @@
         return;
       }
 
-      const destination = backButton.href;
-
-      if (!destination) return;
-
       event.preventDefault();
-      leaveARPage(destination);
+      leaveARPage(backButton.href);
     });
   });
 
-  window.addEventListener("pagehide", () => {
-    stopCamera();
-  });
+  window.addEventListener("pagehide", stopCamera);
 
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
       window.location.reload();
     }
   });
-  const navigation = performance.getEntriesByType("navigation")[0];
-  const isReload = navigation && navigation.type === "reload";
-
-  if (!isReload) {
-    window.location.reload();
-  }
 })();
