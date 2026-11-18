@@ -443,6 +443,15 @@ canvas{
   line-height: 1.4;
 }
 
+/*고사목 외수피 생물 서식 위도*/
+.species-latitude {
+  margin: 0 0 18px;
+  color: #435d54;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
 .species-description{
   margin: 0;
   font-size: 15px;

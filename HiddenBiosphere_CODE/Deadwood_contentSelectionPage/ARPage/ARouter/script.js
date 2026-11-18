@@ -1,3 +1,4 @@
+
 /*전역 DOM 요소와 상태*/
 let sceneRoot;
 
@@ -63,8 +64,11 @@ AFRAME.registerComponent("ar-touch-raycaster", {
     this.raycaster = new THREE.Raycaster();
     this.pointer = new THREE.Vector2();
     this.onTouchStart = this.onTouchStart.bind(this);
-    window.addEventListener("touchstart", this.onTouchStart, { passive: false });
+    window.addEventListener("touchstart", this.onTouchStart, {
+      passive: false
+    });
   },
+
   onTouchStart: function (event) {
     const target = event.target;
 
@@ -82,54 +86,78 @@ AFRAME.registerComponent("ar-touch-raycaster", {
     ) {
       return;
     }
-    if (infoPanel && infoPanel.classList.contains("is-open")) {
+
+    if (
+      infoPanel &&
+      infoPanel.classList.contains("is-open")
+    ) {
       return;
     }
-    if (event.touches.length !== 1 || gestureActive || blockObjectClick) {
+
+    if (
+      event.touches.length !== 1 ||
+      gestureActive ||
+      blockObjectClick
+    ) {
       return;
     }
 
     const sceneElement = this.el.sceneEl;
     if (!sceneElement) return;
+
     const camera = sceneElement.camera;
     const canvas = sceneElement.canvas;
     if (!camera || !canvas) return;
 
     const touch = event.touches[0];
     const rect = canvas.getBoundingClientRect();
+
     if (rect.width === 0 || rect.height === 0) {
       return;
     }
 
     /*터치 좌표 변환*/
-    this.pointer.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-    this.pointer.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+    this.pointer.x =
+      ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+
+    this.pointer.y =
+      -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+
     camera.updateMatrixWorld(true);
     this.raycaster.setFromCamera(this.pointer, camera);
 
     const clickableElements = Array.from(
       document.querySelectorAll(".clickable")
     );
+
     const objectsToIntersect = [];
 
     /*각 히트박스와 자식 메쉬에 data-part 저장*/
     clickableElements.forEach((element) => {
       if (!element.object3D) return;
-      const part = element.dataset.part || element.getAttribute("data-part");
+
+      const part =
+        element.dataset.part ||
+        element.getAttribute("data-part");
+
       element.object3D.updateMatrixWorld(true);
+
       element.object3D.traverse((child) => {
         child.userData.arPart = part;
         child.userData.arClickableElement = element;
+
         if (child.isMesh) {
           objectsToIntersect.push(child);
         }
       });
     });
 
-    const intersections = this.raycaster.intersectObjects(
-      objectsToIntersect,
-      false
-    );
+    const intersections =
+      this.raycaster.intersectObjects(
+        objectsToIntersect,
+        false
+      );
+
     if (intersections.length === 0) {
       console.log("터치된 히트박스 없음");
       return;
@@ -138,8 +166,10 @@ AFRAME.registerComponent("ar-touch-raycaster", {
     /*터치된 메쉬의 part와 HTML 요소 사용*/
     const intersection = intersections[0];
     const part = intersection.object.userData.arPart;
+
     const clickableElement =
       intersection.object.userData.arClickableElement;
+
     if (!part || !clickableElement) {
       return;
     }
@@ -150,16 +180,22 @@ AFRAME.registerComponent("ar-touch-raycaster", {
       "distance:",
       intersection.distance
     );
+
     if (event.cancelable) {
       event.preventDefault();
     }
+
     event.stopPropagation();
 
     /*선택된 part 직접 전달*/
     openInfoPanel(part);
   },
+
   remove: function () {
-    window.removeEventListener("touchstart", this.onTouchStart);
+    window.removeEventListener(
+      "touchstart",
+      this.onTouchStart
+    );
   }
 });
 
@@ -170,14 +206,17 @@ const objectInfo = {
     title: "キノコ",
     description:
       "キノコは倒木を分解し、木の中に蓄えられた栄養分が再び土や森へと循環するのを支えている。",
+
     encyclopedia: {
       subtitle: "広葉樹\n針葉樹",
       title: "菌類",
+
       species: [
         {
           name: "シイタケ",
           scientificName: "Lentinula edodes",
           latitude: "北緯約20°〜45°（亜熱帯〜冷温帯）",
+
 /*
 Sierra-Patev, S., et al. (2023).
 A global phylogenomic analysis of the shiitake genus Lentinula.
@@ -192,16 +231,21 @@ https://doi.org/10.3390/jof11100730
 Development History, Current Situation and Trends of Global Lentinula edodes Industry. (2024).
 https://www.syjxb.com/EN/10.16488/j.cnki.1005-9873.2024.03.001
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/siitake.png",
+
           category: "菌類",
+
           description:
             "シイタケは、主に広葉樹の枯死木や倒木に発生する木材腐朽菌である。菌糸を木の内部へ広げ、硬い木の組織をゆっくりと分解する。その過程で、木に含まれていた栄養分を土へ戻し、森の循環を支える役割を持つ。"
         },
+
         {
           name: "ヒラタケ",
           scientificName: "Pleurotus ostreatus",
           latitude: "北緯約25°〜65°（暖温帯〜亜寒帯）",
+
 /*
 OECD. (2005).
 Consensus Document on the Biology of Pleurotus spp. (Oyster Mushroom).
@@ -219,16 +263,21 @@ late Eocene origin in East Asia, multiple dispersal, and complex speciation.
 IMA Fungus, 11, Article 10.
 https://doi.org/10.1186/s43008-020-00031-1
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/hiratake.png",
+
           category: "菌類",
+
           description:
             "ヒラタケは、広葉樹の枯死木や倒木に発生する木材腐朽菌である。木の内部に菌糸を広げ、木材を分解しながら成長する。枯死木に残された栄養分を土へ戻し、森の物質循環を支える役割を持つ。"
         },
+
         {
           name: "スエヒロタケ",
           scientificName: "Schizophyllum commune",
           latitude: "南緯約50°〜北緯約70°（熱帯〜亜寒帯）",
+
 /*
 Schizophyllum commune: a case study for testing the potential introduction of non-native strains into New Zealand. (2013).
 New Zealand Journal of Botany.
@@ -242,16 +291,21 @@ Royal Botanic Gardens, Kew.
 Schizophyllum commune Fr.
 https://species.data.kew.org/species/208403
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/suehirotake.png",
+
           category: "菌類",
+
           description:
             "スエヒロタケは、枯死木や倒木、枯れ枝などに発生する木材腐朽菌である。扇形の小さな傘を広げるように成長し、木の内部に菌糸を伸ばして木材を分解する。枯死木に残された有機物を分解し、栄養分を土へ戻すことで、森の循環を支える役割を持つ"
         },
+
         {
           name: "キクラゲ",
           scientificName: "Auricularia auricula-judae",
           latitude: "北緯約40°〜60°（温帯〜冷温帯）",
+
 /*
 Wu, F., et al. (2021).
 Global Diversity and Updated Phylogeny of Auricularia
@@ -269,16 +323,21 @@ Whose Ear?: Proposal to conserve the name Auricularia auricula
 F1000Research, 12, 948 (2023).
 https://pmc.ncbi.nlm.nih.gov/articles/PMC11009569/
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/kikurage.png",
+
           category: "菌類",
+
           description:
             "キクラゲは、主に広葉樹の枯死木や倒木、枯れ枝などに発生する木材腐朽菌である。ゼリー状で耳のような形をしており、湿った環境で成長しやすい。木の内部に菌糸を広げ、木材を分解することで、枯死木に残された栄養分を土へ戻す役割を持つ。"
         },
+
         {
           name: "マンネンタケ",
           scientificName: "Ganoderma sichuanense",
           latitude: "北緯約8°〜45°（熱帯〜冷温帯）",
+
 /*
 Taxonomic evaluation of selected Ganoderma species and database sequence validation. (2017).
 https://pmc.ncbi.nlm.nih.gov/articles/PMC5534161/
@@ -292,16 +351,21 @@ Environmental Protection Authority, New Zealand. (2022).
 APP204204: EPA Staff Assessment Report.
 https://www.epa.govt.nz/assets/FileAPI/hsno-ar/APP204204/APP204204-EPA-Staff-Assessment-Report.pdf
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/mannnenntake.png",
+
           category: "菌類",
+
           description:
             "マンネンタケは、枯死木や切り株の根元などに発生する木材腐朽菌である。硬く光沢のある傘を持ち、赤褐色から黒褐色の特徴的な見た目をしている。菌糸を木の内部へ広げ、木材をゆっくりと分解しながら、枯死木に残された栄養分を土へ戻す役割を持つ。"
         },
+
         {
           name: "ヤマブシタケ",
           scientificName: "Hericium erinaceus",
           latitude: "北緯約30°〜60°（暖温帯〜冷温帯）",
+
 /*
 IUCN. (2019).
 Hericium erinaceus.
@@ -318,19 +382,22 @@ A multilocus phylogeny of Hericium (Hericiaceae, Russulales).
 Persoonia, 55, 141–157.
 https://doi.org/10.3114/persoonia.2025.55.04
 https://pmc.ncbi.nlm.nih.gov/articles/PMC12798842/
-
-
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/yamabusitake.png",
+
           category: "菌類",
+
           description:
             "ヤマブシタケは、主に広葉樹の枯死木や倒木に発生する木材腐朽菌である。白く細長い針のような形をした特徴的なキノコで、木の内部に菌糸を広げながら成長する。木材を分解し、枯死木に残された栄養分を土へ戻すことで、森の循環を支える役割を持つ。"
         },
+
         {
           name: "ウマノケタケ",
           scientificName: "Marasmius crinisequi",
           latitude: "南緯約30°〜北緯約25°（熱帯〜亜熱帯）",
+
 /*
 Guard, F. E., Dearnaley, J. D. W., May, T. W., & Lebel, T. (2024).
 Untangling horsehair fungi in Australia: Marasmius crinis-equi
@@ -346,16 +413,21 @@ Index Fungorum.
 Marasmius crinis-equi F. Muell. ex Kalchbr.
 https://www.indexfungorum.org/names/NamesRecord.asp?RecordID=356828
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/umanoketake.png",
+
           category: "菌類",
+
           description:
             "ウマノケタケは、広葉樹の枯れ枝や落葉の上に発生する小型のキノコである。髪の毛のような黒く細い菌糸束を広げ、その上に小さな傘をつくる。枯れ枝や落葉に残された有機物を分解し、森の中の物質循環を支える役割を持つ。"
         },
+
         {
           name: "ブクリョウ",
           scientificName: "Wolfiporia extensa / Poria cocos",
           latitude: "北緯約20°〜45°（亜熱帯〜冷温帯）",
+
 /*
 Papp, V., & Dai, Y.-C. (2022).
 What is the correct scientific name for “Fuling” medicinal mushroom?
@@ -376,16 +448,21 @@ Poria – Wolfiporia extensa.
 Natural Health Product Monograph.
 https://webprod.hc-sc.gc.ca/nhpid-bdipsn/dbImages/mono_poria-wolfiporia-extensa_en.pdf
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/bukurixyou.png",
+
           category: "菌類",
+
           description:
             "茯苓は、主にマツ類などの針葉樹の根や切り株の周辺に発生する木材腐朽菌である。地中で菌糸が集まり、かたまり状の菌核をつくることが特徴で、一般的なキノコのように傘を広げる姿とは異なる。枯れた根や木材を分解しながら成長し、森林の物質循環に関わる役割を持つ。"
         },
+
         {
           name: "ハナビラタケ",
           scientificName: "Sparassis crispa",
           latitude: "北緯約35°〜65°（温帯〜亜寒帯）",
+
 /*
 Dai, Y.-C., et al. (2006).
 Phylogeny and a new species of Sparassis (Polyporales, Basidiomycota):
@@ -404,16 +481,21 @@ Poria – Wolfiporia extensa.
 Natural Health Product Monograph.
 https://webprod.hc-sc.gc.ca/nhpid-bdipsn/dbImages/mono_poria-wolfiporia-extensa_en.pdf
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/hanabiratake.png",
+
           category: "菌類",
+
           description:
             "ハナビラタケは、主にマツ類などの針葉樹の根元や切り株の周辺に発生する木材腐朽菌である。白色から淡いクリーム色の花びらのような形をしており、重なり合った波状のひだが特徴である。木の根や切り株の内部に菌糸を広げ、木材を分解しながら、森の物質循環を支える役割を持つ。"
         },
+
         {
           name: "マツノサルノコシカケ",
           scientificName: "Porodaedalea pini / Phellinus pini",
           latitude: "北緯約35°〜70°（温帯〜亜寒帯）",
+
 /*
 Wu, F., Dai, S.-J., Vlasák, J., Spirin, V., & Dai, Y.-C. (2019).
 Phylogeny and global diversity of Porodaedalea,
@@ -437,16 +519,21 @@ NCBI Taxonomy.
 Porodaedalea pini (Taxonomy ID: 108901).
 https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=108901
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/matunosarunokosikake.png",
+
           category: "菌類",
+
           description:
             "マツノサルノコシカケは、主にマツ類などの針葉樹に発生する硬い木材腐朽菌である。幹や枯死木に棚状の子実体をつくり、木の内部に菌糸を広げながら木材をゆっくりと分解する。枯れた木や弱った木を分解し、森の物質循環を支える役割を持つ。"
         },
+
         {
           name: "トンビマイタケ",
           scientificName: "Meripilus giganteus",
           latitude: "北緯約35°〜60°（暖温帯〜冷温帯）",
+
 /*
 First Nature.
 Meripilus giganteus (Pers.) P. Karst. – Giant Polypore.
@@ -466,16 +553,21 @@ Meripilus giganteus (Pers.) P. Karst.
 Index Fungorum Record ID: 414455.
 https://www.speciesfungorum.org/Names/NamesRecord.asp?RecordID=414455
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/tonnbimaitake.png",
+
           category: "菌類",
+
           description:
             "トンビマイタケは、主にブナなどの広葉樹の根元や切り株、枯死木の周辺に発生する大型の木材腐朽菌である。重なり合った扇形の傘を広げるように成長し、木の内部に菌糸を伸ばして木材を分解する。枯死木や弱った木を分解し、森の物質循環を支える役割を持つ。"
         },
+
         {
           name: "カイガラタケ",
           scientificName: "Lenzites betulina",
           latitude: "北緯約25°〜65°（暖温帯〜亜寒帯）",
+
 /*
 North Carolina State University.
 Larry F. Grand Mycological Herbarium.
@@ -492,21 +584,26 @@ Lenzites betulinus (L.) Fr. [as 'betulina'].
 Index Fungorum Record ID: 199017.
 https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=199017
 */
+
           image:
             "../../../assets/Deadwood/EncyclopediaPage/kaigaratake.png",
+
           category: "菌類",
+
           description:
             "カイガラタケは、主に広葉樹の枯れ木や枯死木に発生する木材腐朽菌である。貝殻のような半円形の傘を重ねるようにつくり、傘の裏にはヒダ状の構造が見られる。木材を白色腐朽させながら分解し、枯死木に残された有機物を土へ戻すことで、森の物質循環を支える役割を持つ。"
-        },
+        }
       ]
     }
   },
+
   moss: {
     category: "コケ植物",
     title: "コケ",
     description:
       "倒木は湿気を保ちやすく、コケが生育する場所となる。コケはその表面の水分を保ち、小さな昆虫や微生物が活動しやすい環境をつくる。",
     hasEncyclopedia: false,
+
     encyclopedia: {
       subtitle: "",
       title: "コケ",
@@ -518,16 +615,18 @@ https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=199017
             "../../../assets/Deadwood/EncyclopediaPage/.png",
           category: "",
           description: ""
-        },
+        }
       ]
     }
   },
+
   hole: {
     category: "微小生息環境",
     title: "昆虫が出入りした痕跡",
     description:
       "倒木に残された穴やすき間は、昆虫が内部を利用した痕跡である。内部への出入り口や隠れ場所として使われ、倒木の中に多様な生物が暮らしていることを示している。",
     hasEncyclopedia: false,
+
     encyclopedia: {
       subtitle: "倒木の穴に暮らす",
       title: "生物",
@@ -539,7 +638,7 @@ https://www.speciesfungorum.org/names/Synonymy.asp?RecordID=199017
             "../../../assets/Deadwood/EncyclopediaPage/.png",
           category: "昆虫",
           description: ""
-        },
+        }
       ]
     }
   }
@@ -551,25 +650,46 @@ const SPECIES_PER_PAGE = 4;
 /*DOM 준비*/
 document.addEventListener("DOMContentLoaded", () => {
   sceneRoot = document.querySelector("#scene-root");
+
   infoPanel = document.querySelector("#info-panel");
   infoCloseButton = document.querySelector("#info-close");
   infoCategory = document.querySelector("#info-category");
   infoTitle = document.querySelector("#info-title");
   infoDescription = document.querySelector("#info-description");
-  encyclopediaButton = document.querySelector("#encyclopedia-button");
-  encyclopediaModal = document.querySelector("#encyclopedia-modal");
-  encyclopediaCloseButton = document.querySelector("#encyclopedia-close");
-  encyclopediaSubtitle = document.querySelector("#encyclopedia-subtitle");
-  encyclopediaTitle = document.querySelector("#encyclopedia-title");
-  encyclopediaGrid = document.querySelector("#encyclopedia-grid");
-  encyclopediaPagination = document.querySelector("#encyclopedia-pagination");
+
+  encyclopediaButton =
+    document.querySelector("#encyclopedia-button");
+
+  encyclopediaModal =
+    document.querySelector("#encyclopedia-modal");
+
+  encyclopediaCloseButton =
+    document.querySelector("#encyclopedia-close");
+
+  encyclopediaSubtitle =
+    document.querySelector("#encyclopedia-subtitle");
+
+  encyclopediaTitle =
+    document.querySelector("#encyclopedia-title");
+
+  encyclopediaGrid =
+    document.querySelector("#encyclopedia-grid");
+
+  encyclopediaPagination =
+    document.querySelector("#encyclopedia-pagination");
+
   speciesModal = document.querySelector("#species-modal");
   speciesCloseButton = document.querySelector("#species-close");
   speciesImage = document.querySelector("#species-image");
   speciesCategory = document.querySelector("#species-category");
   speciesName = document.querySelector("#species-name");
-  speciesScientificName = document.querySelector("#species-scientific-name");
-  speciesDescription = document.querySelector("#species-description");
+
+  speciesScientificName =
+    document.querySelector("#species-scientific-name");
+
+  speciesDescription =
+    document.querySelector("#species-description");
+
   touchGuide = document.querySelector(".touch-guide");
 
   /*설명창 닫기*/
@@ -634,12 +754,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
   bindClickEvents();
 });
 
 /*설명창*/
 function openInfoPanel(part) {
   const info = objectInfo[part];
+
   if (
     !info ||
     !infoPanel ||
@@ -652,6 +774,7 @@ function openInfoPanel(part) {
 
   selectedPart = part;
   encyclopediaPage = 0;
+
   infoCategory.textContent = info.category;
   infoTitle.textContent = info.title;
   infoDescription.textContent = info.description;
@@ -659,13 +782,20 @@ function openInfoPanel(part) {
   if (touchGuide) {
     touchGuide.classList.add("is-hidden");
   }
+
   infoPanel.classList.add("is-open");
   infoPanel.setAttribute("aria-hidden", "false");
 
   /*도감 버튼 표시 여부*/
   if (encyclopediaButton) {
-    const hasEncyclopedia = info.hasEncyclopedia !== false;
-    encyclopediaButton.classList.toggle("is-visible", hasEncyclopedia);
+    const hasEncyclopedia =
+      info.hasEncyclopedia !== false;
+
+    encyclopediaButton.classList.toggle(
+      "is-visible",
+      hasEncyclopedia
+    );
+
     encyclopediaButton.setAttribute(
       "aria-hidden",
       hasEncyclopedia ? "false" : "true"
@@ -678,15 +808,19 @@ function closeInfoPanel() {
     infoPanel.classList.remove("is-open");
     infoPanel.setAttribute("aria-hidden", "true");
   }
+
   if (encyclopediaButton) {
     encyclopediaButton.classList.remove("is-visible");
     encyclopediaButton.setAttribute("aria-hidden", "true");
   }
+
   closeSpeciesModal();
   closeEncyclopedia();
+
   if (touchGuide) {
     touchGuide.classList.remove("is-hidden");
   }
+
   selectedPart = null;
   encyclopediaPage = 0;
 }
@@ -696,7 +830,10 @@ function openEncyclopedia() {
   if (!selectedPart) {
     return;
   }
-  const encyclopedia = objectInfo[selectedPart]?.encyclopedia;
+
+  const encyclopedia =
+    objectInfo[selectedPart]?.encyclopedia;
+
   if (
     !encyclopedia ||
     !encyclopediaModal ||
@@ -705,10 +842,17 @@ function openEncyclopedia() {
   ) {
     return;
   }
-  encyclopediaSubtitle.textContent = encyclopedia.subtitle;
-  encyclopediaTitle.textContent = encyclopedia.title;
+
+  encyclopediaSubtitle.textContent =
+    encyclopedia.subtitle;
+
+  encyclopediaTitle.textContent =
+    encyclopedia.title;
+
   encyclopediaPage = 0;
+
   renderEncyclopediaPage();
+
   encyclopediaModal.classList.add("is-open");
   encyclopediaModal.setAttribute("aria-hidden", "false");
 }
@@ -717,7 +861,9 @@ function closeEncyclopedia() {
   if (!encyclopediaModal) {
     return;
   }
+
   closeSpeciesModal();
+
   encyclopediaModal.classList.remove("is-open");
   encyclopediaModal.setAttribute("aria-hidden", "true");
 }
@@ -732,20 +878,27 @@ function renderEncyclopediaPage() {
     return;
   }
 
-  const species = objectInfo[selectedPart]?.encyclopedia?.species || [];
+  const species =
+    objectInfo[selectedPart]?.encyclopedia?.species || [];
+
   const pageCount = Math.max(
     1,
     Math.ceil(species.length / SPECIES_PER_PAGE)
   );
+
   encyclopediaPage = Math.min(
     Math.max(encyclopediaPage, 0),
     pageCount - 1
   );
-  const startIndex = encyclopediaPage * SPECIES_PER_PAGE;
+
+  const startIndex =
+    encyclopediaPage * SPECIES_PER_PAGE;
+
   const pageSpecies = species.slice(
     startIndex,
     startIndex + SPECIES_PER_PAGE
   );
+
   encyclopediaGrid.innerHTML = "";
 
   pageSpecies.forEach((speciesItem) => {
@@ -763,24 +916,34 @@ function renderEncyclopediaPage() {
     name.textContent = speciesItem.name;
 
     const scientificName = document.createElement("p");
-    scientificName.className = "encyclopedia-species-scientific";
-    scientificName.textContent = speciesItem.scientificName;
+    scientificName.className =
+      "encyclopedia-species-scientific";
+
+    scientificName.textContent =
+      speciesItem.scientificName;
 
     card.append(image, name, scientificName);
+
+    /*도감 카드 클릭 시 상세 팝업 호출*/
     card.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
+
       openSpeciesModal(speciesItem);
     });
+
     encyclopediaGrid.appendChild(card);
   });
 
   /*마지막 페이지에서도 2×2 레이아웃 유지*/
-  while (encyclopediaGrid.children.length < SPECIES_PER_PAGE) {
+  while (
+    encyclopediaGrid.children.length < SPECIES_PER_PAGE
+  ) {
     const empty = document.createElement("div");
     empty.setAttribute("aria-hidden", "true");
     encyclopediaGrid.appendChild(empty);
   }
+
   renderPagination(pageCount);
 }
 
@@ -789,12 +952,23 @@ function renderPagination(pageCount) {
   if (!encyclopediaPagination) {
     return;
   }
+
   encyclopediaPagination.innerHTML = "";
-  for (let pageIndex = 0; pageIndex < pageCount; pageIndex += 1) {
+
+  for (
+    let pageIndex = 0;
+    pageIndex < pageCount;
+    pageIndex += 1
+  ) {
     const dot = document.createElement("button");
+
     dot.type = "button";
     dot.className = "encyclopedia-page-dot";
-    dot.setAttribute("aria-label", `${pageIndex + 1}ページ`);
+
+    dot.setAttribute(
+      "aria-label",
+      `${pageIndex + 1}ページ`
+    );
 
     if (pageIndex === encyclopediaPage) {
       dot.classList.add("is-active");
@@ -804,9 +978,11 @@ function renderPagination(pageCount) {
     dot.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
+
       encyclopediaPage = pageIndex;
       renderEncyclopediaPage();
     });
+
     encyclopediaPagination.appendChild(dot);
   }
 }
@@ -825,30 +1001,78 @@ function openSpeciesModal(speciesItem) {
     return;
   }
 
+  /*기존 생물 상세 정보*/
   speciesImage.src = speciesItem.image;
   speciesImage.alt = speciesItem.name;
+
   speciesCategory.textContent = speciesItem.category;
   speciesName.textContent = speciesItem.name;
-  speciesScientificName.textContent = speciesItem.scientificName;
-  speciesDescription.textContent = speciesItem.description;
+
+  speciesScientificName.textContent =
+    speciesItem.scientificName;
+
+  speciesDescription.textContent =
+    speciesItem.description;
+
+  /*기존 위도 요소 제거*/
+  const oldLatitude =
+    document.getElementById("species-latitude");
+
+  if (oldLatitude) {
+    oldLatitude.remove();
+  }
+
+  /*위도 요소 생성*/
+  const latitudeElement =
+    document.createElement("p");
+
+  latitudeElement.id = "species-latitude";
+  latitudeElement.className = "species-latitude";
+
+  latitudeElement.textContent = speciesItem.latitude
+    ? `生息緯度：${speciesItem.latitude}`
+    : "生息緯度：資料未登録";
+
+  /*학명 바로 아래에 위도 삽입*/
+  speciesScientificName.insertAdjacentElement(
+    "afterend",
+    latitudeElement
+  );
+
+  /*상세 팝업 열기*/
   speciesModal.classList.add("is-open");
-  speciesModal.setAttribute("aria-hidden", "false");
+
+  speciesModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 }
 
+/*개별 생물 상세 닫기*/
 function closeSpeciesModal() {
   if (!speciesModal) {
     return;
   }
+
   speciesModal.classList.remove("is-open");
   speciesModal.setAttribute("aria-hidden", "true");
 }
 
 /*AR 히트박스 클릭*/
 function bindClickEvents() {
-  document.querySelectorAll(".clickable").forEach((object) => {
-    object.removeEventListener("click", handleObjectClick);
-    object.addEventListener("click", handleObjectClick);
-  });
+  document.querySelectorAll(".clickable").forEach(
+    (object) => {
+      object.removeEventListener(
+        "click",
+        handleObjectClick
+      );
+
+      object.addEventListener(
+        "click",
+        handleObjectClick
+      );
+    }
+  );
 }
 
 function handleObjectClick(event) {
@@ -856,15 +1080,24 @@ function handleObjectClick(event) {
     event.stopPropagation?.();
     return;
   }
-  if (infoPanel && infoPanel.classList.contains("is-open")) {
+
+  if (
+    infoPanel &&
+    infoPanel.classList.contains("is-open")
+  ) {
     return;
   }
 
   const object = event.currentTarget;
-  const part = object.dataset.part || object.getAttribute("data-part");
+
+  const part =
+    object.dataset.part ||
+    object.getAttribute("data-part");
+
   if (!part) {
     return;
   }
+
   console.log("Clicked:", part);
   openInfoPanel(part);
 }
@@ -873,6 +1106,7 @@ function handleObjectClick(event) {
 function getTouchDistance(touch1, touch2) {
   const deltaX = touch2.clientX - touch1.clientX;
   const deltaY = touch2.clientY - touch1.clientY;
+
   return Math.hypot(deltaX, deltaY);
 }
 
@@ -886,25 +1120,39 @@ function getTouchCenter(touch1, touch2) {
 document.addEventListener(
   "touchstart",
   (event) => {
-    if (infoPanel && infoPanel.classList.contains("is-open")) {
+    if (
+      infoPanel &&
+      infoPanel.classList.contains("is-open")
+    ) {
       return;
     }
+
     if (
       encyclopediaModal &&
       encyclopediaModal.classList.contains("is-open")
     ) {
       return;
     }
-    if (speciesModal && speciesModal.classList.contains("is-open")) {
+
+    if (
+      speciesModal &&
+      speciesModal.classList.contains("is-open")
+    ) {
       return;
     }
-    if (event.touches.length !== 2 || !sceneRoot) {
+
+    if (
+      event.touches.length !== 2 ||
+      !sceneRoot
+    ) {
       return;
     }
 
     event.preventDefault();
+
     gestureActive = true;
     blockObjectClick = true;
+
     if (blockClickTimer) {
       clearTimeout(blockClickTimer);
       blockClickTimer = null;
@@ -912,14 +1160,23 @@ document.addEventListener(
 
     const touch1 = event.touches[0];
     const touch2 = event.touches[1];
-    startDistance = getTouchDistance(touch1, touch2);
-    startCenter = getTouchCenter(touch1, touch2);
 
-    const currentScale = sceneRoot.getAttribute("scale");
-    const currentPosition = sceneRoot.getAttribute("position");
+    startDistance =
+      getTouchDistance(touch1, touch2);
+
+    startCenter =
+      getTouchCenter(touch1, touch2);
+
+    const currentScale =
+      sceneRoot.getAttribute("scale");
+
+    const currentPosition =
+      sceneRoot.getAttribute("position");
+
     if (currentScale) {
       startScale = currentScale.x;
     }
+
     if (currentPosition) {
       startPosition = {
         x: currentPosition.x,
@@ -934,23 +1191,35 @@ document.addEventListener(
 document.addEventListener(
   "touchmove",
   (event) => {
-    if (!gestureActive || event.touches.length !== 2 || !sceneRoot) {
+    if (
+      !gestureActive ||
+      event.touches.length !== 2 ||
+      !sceneRoot
+    ) {
       return;
     }
 
     event.preventDefault();
+
     const touch1 = event.touches[0];
     const touch2 = event.touches[1];
-    const currentDistance = getTouchDistance(touch1, touch2);
-    const currentCenter = getTouchCenter(touch1, touch2);
+
+    const currentDistance =
+      getTouchDistance(touch1, touch2);
+
+    const currentCenter =
+      getTouchCenter(touch1, touch2);
 
     /*확대·축소*/
     if (startDistance > 0) {
-      const scaleRatio = currentDistance / startDistance;
+      const scaleRatio =
+        currentDistance / startDistance;
+
       const newScale = Math.min(
         Math.max(startScale * scaleRatio, 15),
         100
       );
+
       sceneRoot.setAttribute(
         "scale",
         `${newScale} ${newScale} ${newScale}`
@@ -958,11 +1227,20 @@ document.addEventListener(
     }
 
     /*이동*/
-    const deltaX = currentCenter.x - startCenter.x;
-    const deltaY = currentCenter.y - startCenter.y;
+    const deltaX =
+      currentCenter.x - startCenter.x;
+
+    const deltaY =
+      currentCenter.y - startCenter.y;
+
     const moveSensitivity = 0.5;
-    const newX = startPosition.x + deltaX * moveSensitivity;
-    const newY = startPosition.y - deltaY * moveSensitivity;
+
+    const newX =
+      startPosition.x + deltaX * moveSensitivity;
+
+    const newY =
+      startPosition.y - deltaY * moveSensitivity;
+
     sceneRoot.setAttribute(
       "position",
       `${newX} ${newY} ${startPosition.z}`
@@ -974,8 +1252,12 @@ document.addEventListener(
 document.addEventListener(
   "touchend",
   (event) => {
-    if (gestureActive && event.touches.length < 2) {
+    if (
+      gestureActive &&
+      event.touches.length < 2
+    ) {
       gestureActive = false;
+
       blockClickTimer = setTimeout(() => {
         blockObjectClick = false;
         blockClickTimer = null;
@@ -989,6 +1271,7 @@ document.addEventListener(
   "touchcancel",
   () => {
     gestureActive = false;
+
     blockClickTimer = setTimeout(() => {
       blockObjectClick = false;
       blockClickTimer = null;
@@ -997,8 +1280,6 @@ document.addEventListener(
   { passive: false }
 );
 
-
-/*자연 분포 위도*/
 /*
 const naturalLatitudeData = {
   "Schizophyllum commune": {
@@ -1011,13 +1292,15 @@ const naturalLatitudeData = {
   }
 };
 */
-/*위도 표시*/
+
 /*
 function updateSpeciesLatitude(speciesItem) {
   const data =
     naturalLatitudeData[speciesItem.scientificName];
+
   const latitude =
     data?.latitude || "緯度範囲は未確定";
+
   return latitude;
 }
 */
