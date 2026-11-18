@@ -2,6 +2,44 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <script>
+    (function () {
+      "use strict";
+    
+      const KEY =
+        "hb-ar-entry-reload:" + window.location.pathname;
+    
+      const navigation =
+        performance.getEntriesByType("navigation")[0];
+    
+      const isReload =
+        navigation && navigation.type === "reload";
+    
+      let reloadRequested = false;
+    
+      try {
+        const timestamp = Number(sessionStorage.getItem(KEY));
+        sessionStorage.removeItem(KEY);
+    
+        reloadRequested =
+          timestamp > 0 &&
+          Date.now() - timestamp < 15000;
+      } catch (error) {
+        reloadRequested = Boolean(isReload);
+      }
+    
+      if (!reloadRequested && !isReload) {
+        try {
+          sessionStorage.setItem(KEY, String(Date.now()));
+        } catch (error) {
+          console.warn("Session storage unavailable", error);
+        }
+    
+        window.location.reload();
+        window.stop();
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta
     name="viewport"
