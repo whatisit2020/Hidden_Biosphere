@@ -17,39 +17,42 @@
         }
         video.pause();
         video.srcObject = null;
-        video.removeAttribute("src");
-        video.load();
-      } catch (e) {
-      }
+      } catch (e) {}
     });
   }
 
-  function handleNavigationClick(event) {
-    const link = event.target.closest("a");
-    if (!link || !link.href) return;
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest("a");
+      if (!link || !link.href) return;
 
-    const hrefAttr = link.getAttribute("href") || "";
-    if (
-      link.target === "_blank" ||
-      link.origin !== window.location.origin ||
-      hrefAttr.startsWith("#") ||
-      hrefAttr.startsWith("javascript:")
-    ) {
-      return;
-    }
+      const hrefAttr = link.getAttribute("href") || "";
+      if (
+        link.target === "_blank" ||
+        link.origin !== window.location.origin ||
+        hrefAttr.startsWith("#") ||
+        hrefAttr.startsWith("javascript:")
+      ) {
+        return;
+      }
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
 
-    if (isNavigating) return;
-    isNavigating = true;
+      if (isNavigating) return;
+      isNavigating = true;
 
-    releaseCamera();
+      releaseCamera();
+      const nextUrl = new URL(link.href);
+      nextUrl.searchParams.set("t", Date.now().toString());
 
-    setTimeout(() => {
-      window.location.href = link.href;
-    }, 50);
-  }
+      setTimeout(() => {
+        window.location.replace(nextUrl.toString());
+      }, 80);
+    },
+    true
+  );
 
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
@@ -58,7 +61,4 @@
   });
 
   window.addEventListener("pagehide", releaseCamera);
-  window.addEventListener("beforeunload", releaseCamera);
-
-  document.addEventListener("click", handleNavigationClick, true);
 })();
