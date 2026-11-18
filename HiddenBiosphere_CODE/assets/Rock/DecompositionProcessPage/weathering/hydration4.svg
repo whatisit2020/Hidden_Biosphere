@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_レイヤー_2" data-name="レイヤー 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 101.99">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #5192cf;
+      }
+
+      .cls-2 {
+        fill: #007eca;
+      }
+
+      .cls-3 {
+        fill: #909090;
+      }
+    </style>
+  </defs>
+  <g id="_レイヤー_1-2" data-name="レイヤー 1">
+    <polygon class="cls-3" points="101.99 0 39.74 23.18 0 85.43 9.93 101.99 133.11 101.99 150 85.1 101.99 0"/>
+    <rect class="cls-1" x="40.77" y="47.54" width="15.8" height="15.8" transform="translate(53.45 -18.17) rotate(45)"/>
+    <rect class="cls-1" x="58.95" y="68.55" width="18.51" height="18.51" transform="translate(74.99 -25.44) rotate(45)"/>
+    <rect class="cls-1" x="77.29" y="35.08" width="14.47" height="14.47" transform="translate(54.68 -47.37) rotate(45)"/>
+    <rect class="cls-1" x="89.54" y="60.71" width="14.17" height="14.17" transform="translate(76.23 -48.46) rotate(45)"/>
+    <path class="cls-2" d="M52.58,52.14c2.3,0,3.92-1.62,3.92-3.92s-3.92-6.35-3.92-8.08c0,1.73-3.92,5.78-3.92,8.08s1.62,3.92,3.92,3.92Z"/>
+    <path class="cls-2" d="M87.19,40.04c2.3,0,3.92-1.62,3.92-3.92s-3.92-6.35-3.92-8.08c0,1.73-3.92,5.78-3.92,8.08s1.62,3.92,3.92,3.92Z"/>
+    <path class="cls-2" d="M74.31,77.7c2.3,0,3.92-1.62,3.92-3.92s-3.92-6.35-3.92-8.08c0,1.73-3.92,5.78-3.92,8.08s1.62,3.92,3.92,3.92Z"/>
+    <path class="cls-2" d="M100.54,67.72c2.3,0,3.92-1.62,3.92-3.92s-3.92-6.35-3.92-8.08c0,1.73-3.92,5.78-3.92,8.08s1.62,3.92,3.92,3.92Z"/>
+  </g>
+</svg>
