@@ -2,7 +2,111 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+    <script>
+(() => {
+  const state = {
+    camera: 0,
+    init: 0,
+    initError: "",
+    loaded: 0,
+    found: 0
+  };
+  let panel;
 
+  function render() {
+    if (!document.body) return;
+    if (!panel) {
+      panel = document.createElement("pre");
+      panel.style.cssText =
+        "position:fixed;left:8px;bottom:16px;z-index:2147483647;" +
+        "margin:0;padding:8px;background:#111;color:#8f8;" +
+        "font:12px/1.4 monospace;pointer-events:none";
+      document.body.appendChild(panel);
+    }
+    panel.textContent = [
+      "카메라 준비: " + state.camera,
+      "추적 init 전송: " + state.init,
+      "마커 데이터 로딩: " + state.loaded,
+      "마커 인식: " + state.found,
+      ...(state.initError ? ["init 오류: " + state.initError] : [])
+    ].join("\n");
+  }
+
+  window.addEventListener("arjs-video-loaded", () => {
+    state.camera++;
+    render();
+  });
+
+  window.addEventListener("arjs-nft-loaded", () => {
+    state.loaded++;
+    render();
+  });
+
+  document.addEventListener("markerFound", event => {
+    if (event.target.id !== "deadwood-marker") return;
+    state.found++;
+    render();
+  }, true);
+
+  const original = Worker.prototype.postMessage;
+  Worker.prototype.postMessage = function (message) {
+    const isInit = message?.type === "init" &&
+      typeof message.marker === "string";
+    try {
+      const result = Reflect.apply(original, this, arguments);
+      if (isInit) {
+        state.init++;
+        render();
+      }
+      return result;
+    } catch (error) {
+      if (isInit) {
+        state.initError = error.name;
+        render();
+      }
+      throw error;
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", render, { once: true });
+})();
+</script>
+<script>
+/*AR 추적 시작 신호 보완*/
+(() => {
+  const eventName = "arjs-video-loaded";
+  const addListener = window.addEventListener;
+  let readyEvent = null;
+
+  addListener.call(window, eventName, event => {
+    readyEvent = event;
+  });
+
+  window.addEventListener = function (type, listener, options) {
+    const event = readyEvent;
+    const video = event?.detail?.component;
+
+    if (
+      this === window &&
+      type === eventName &&
+      typeof listener === "function" &&
+      video?.id === "arjs-video" &&
+      video.isConnected &&
+      video.srcObject &&
+      !options?.signal?.aborted
+    ) {
+      queueMicrotask(() => {
+        if (video.isConnected && !options?.signal?.aborted) {
+          listener.call(window, event);
+        }
+      });
+      return;
+    }
+
+    return addListener.call(this, type, listener, options);
+  };
+})();
+</script>
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no"
