@@ -3,7 +3,7 @@
 
   let isNavigating = false;
 
-  // 1. 카메라 스트림 안전하게 종료
+  // 1. 카메라 스트림 완전히 종료
   function releaseCamera() {
     const videos = document.querySelectorAll("video");
     videos.forEach((video) => {
@@ -23,7 +23,7 @@
     });
   }
 
-  // 2. 링크 클릭 시 URL에 파라미터를 붙이지 않고 깨끗한 원래 주소로 이동
+  // 2. 링크 클릭 시 URL 변경 없이 카메라 정리 후 이동
   document.addEventListener(
     "click",
     (event) => {
@@ -48,8 +48,8 @@
 
       releaseCamera();
 
-      // URL을 변형하지 않고 원래 href 그대로 이동 (NFT 상대 경로 보호)
-      const cleanUrl = link.href.split("?")[0];
+      // URL에 ?t= 등을 붙이지 않고 깨끗한 원래 주소로 이동 (NFT 오류 방지)
+      const cleanUrl = link.href.split("?");
       setTimeout(() => {
         window.location.href = cleanUrl;
       }, 250);
@@ -57,30 +57,35 @@
     true
   );
 
-  // 3. AR 페이지 도착 후 2.5초 뒤에도 비디오 태그 자체가 없으면 딱 1번만 새로고침
+  // 3. AR 페이지 진입 시 실제 카메라 영상이 나오는지 검사 후 1회 자동 새로고침
   window.addEventListener("load", () => {
     const scene = document.querySelector("a-scene");
     if (!scene) return;
 
-    const reloadFlagKey = "ar_auto_reloaded:" + window.location.pathname;
+    const reloadFlagKey = "ar_force_reload:" + window.location.pathname;
 
-    // 이미 자동 새로고침을 한 번 했다면 플래그를 지우고 종료 (무한 루프 방지)
+    // 이미 자동 새로고침을 1회 실행했다면 플래그를 지우고 종료 (무한 루프 차단)
     if (sessionStorage.getItem(reloadFlagKey) === "1") {
       sessionStorage.removeItem(reloadFlagKey);
       return;
     }
 
+    // 1.2초 뒤 실제 카메라 영상이 재생 중인지 확인
     setTimeout(() => {
-      // 권한 팝업이 떠 있거나 승인 직후라면 <video> 태그는 이미 생성되어 있음
       const arVideo = document.querySelector("#arjs-video, video");
+      const isCameraWorking =
+        arVideo &&
+        arVideo.srcObject &&
+        arVideo.readyState >= 2 &&
+        arVideo.videoWidth > 0;
 
-      // 비디오 태그조차 아예 생성되지 않은 먹통 상태일 때만 1회 새로고침
-      if (!arVideo) {
+      // 껍데기 video만 있고 실제 카메라 영상이 안 나오면 1회 자동 새로고침 실행
+      if (!isCameraWorking) {
         sessionStorage.setItem(reloadFlagKey, "1");
         releaseCamera();
         window.location.reload();
       }
-    }, 2500);
+    }, 1200);
   });
 
   // 브라우저 뒤로가기(bfcache) 복원 시 새로고침
