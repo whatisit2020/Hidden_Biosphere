@@ -373,6 +373,28 @@
 
   log("진단 시작");
 
+const originalFetch = window.fetch;
+
+window.fetch = function (...args) {
+  const url = String(args[0]);
+
+  return originalFetch.apply(this, args).then(response => {
+    if (
+      url.includes(".fset") ||
+      url.includes(".iset")
+    ) {
+      log(
+        "NFT 파일 요청: " +
+        response.status + " " + url
+      );
+    }
+    return response;
+  }).catch(error => {
+    log("파일 요청 실패: " + url);
+    throw error;
+  });
+};
+
   // NFT 데이터 로딩 확인
   window.addEventListener("arjs-nft-loaded", () => {
     log("NFT 데이터 로딩 완료");
