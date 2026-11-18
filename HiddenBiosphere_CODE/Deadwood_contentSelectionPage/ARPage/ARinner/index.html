@@ -341,5 +341,81 @@
   </div>
 
   <script src="./script.js"></script>
+  
+<script>
+(function () {
+  const panel = document.createElement("div");
+
+  panel.style.cssText = `
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 999999;
+    background: rgba(0, 0, 0, 0.85);
+    color: #00ff88;
+    padding: 12px;
+    font: 12px/1.6 monospace;
+    max-height: 40vh;
+    overflow-y: auto;
+    pointer-events: none;
+    white-space: pre-wrap;
+  `;
+
+  document.body.appendChild(panel);
+
+  function log(message) {
+    const time = new Date().toLocaleTimeString();
+    panel.textContent += `[${time}] ${message}\n`;
+    panel.scrollTop = panel.scrollHeight;
+  }
+
+  log("진단 시작");
+
+  window.addEventListener("arjs-nft-loaded", () => {
+    log("NFT 데이터 로딩 완료");
+  });
+
+  const marker = document.querySelector("#deadwood-marker");
+
+  if (marker) {
+    marker.addEventListener("markerFound", () => {
+      log("NFT 마커 인식 성공");
+    });
+
+    marker.addEventListener("markerLost", () => {
+      log("NFT 마커 인식 해제");
+    });
+  } else {
+    log("오류: NFT 마커 요소 없음");
+  }
+
+  document.querySelectorAll("[gltf-model]").forEach(model => {
+    const id = model.id || "이름 없는 모델";
+
+    model.addEventListener("model-loaded", () => {
+      log("모델 로딩 완료: " + id);
+    });
+
+    model.addEventListener("model-error", event => {
+      log("모델 로딩 실패: " + id);
+      log(JSON.stringify(event.detail || {}));
+    });
+  });
+
+  window.addEventListener("error", event => {
+    log("JS 오류: " + event.message);
+  });
+
+  window.addEventListener("unhandledrejection", event => {
+    log("Promise 오류: " + String(event.reason));
+  });
+
+  setTimeout(() => {
+    log("20초 경과: 진단 진행 중");
+  }, 20000);
+})();
+</script>
+
 </body>
 </html>
