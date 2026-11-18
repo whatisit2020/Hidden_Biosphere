@@ -48,7 +48,7 @@
 
       releaseCamera();
 
-      // URL에 ?t= 등을 붙이지 않고 깨끗한 원래 주소로 이동 (NFT 오류 방지)
+      // URL에 파라미터를 붙이지 않고 깨끗한 원래 주소로 이동 (NFT 보호)
       const cleanUrl = link.href.split("?");
       setTimeout(() => {
         window.location.href = cleanUrl;
@@ -57,20 +57,19 @@
     true
   );
 
-  // 3. AR 페이지 진입 시 실제 카메라 영상이 나오는지 검사 후 1회 자동 새로고침
-  window.addEventListener("load", () => {
+  // 3. 실제 카메라 영상이 나오는지 검사 후 필요 시 자동 새로고침 (무한 루프 방지 포함)
+  function checkAndReloadIfNeeded() {
     const scene = document.querySelector("a-scene");
     if (!scene) return;
 
-    const reloadFlagKey = "ar_force_reload:" + window.location.pathname;
+    const reloadTimeKey = "ar_last_reload:" + window.location.pathname;
+    const lastReloadTime = Number(sessionStorage.getItem(reloadTimeKey) || 0);
 
-    // 이미 자동 새로고침을 1회 실행했다면 플래그를 지우고 종료 (무한 루프 차단)
-    if (sessionStorage.getItem(reloadFlagKey) === "1") {
-      sessionStorage.removeItem(reloadFlagKey);
+    // 방금(4초 이내에) 자동 새로고침을 이미 실행했다면 무한 루프 방지를 위해 중단
+    if (Date.now() - lastReloadTime < 4000) {
       return;
     }
 
-    // 1.2초 뒤 실제 카메라 영상이 재생 중인지 확인
     setTimeout(() => {
       const arVideo = document.querySelector("#arjs-video, video");
       const isCameraWorking =
@@ -79,18 +78,24 @@
         arVideo.readyState >= 2 &&
         arVideo.videoWidth > 0;
 
-      // 껍데기 video만 있고 실제 카메라 영상이 안 나오면 1회 자동 새로고침 실행
+      // 카메라 영상이 안 나오고 있으면 현재 시각을 기록하고 즉시 새로고침
       if (!isCameraWorking) {
-        sessionStorage.setItem(reloadFlagKey, "1");
+        try {
+          sessionStorage.setItem(reloadTimeKey, String(Date.now()));
+        } catch (e) {}
         releaseCamera();
         window.location.reload();
       }
     }, 1200);
-  });
+  }
 
-  // 브라우저 뒤로가기(bfcache) 복원 시 새로고침
+  // 일반 페이지 로드 시 검사
+  window.addEventListener("load", checkAndReloadIfNeeded);
+
+  // 뒤로가기/캐시 복원(pageshow) 시에도 검사 및 즉시 새로고침
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
+      releaseCamera();
       window.location.reload();
     }
   });
