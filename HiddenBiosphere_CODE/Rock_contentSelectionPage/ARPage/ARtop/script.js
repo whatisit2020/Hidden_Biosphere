@@ -943,6 +943,27 @@ function openSpeciesModal(speciesItem) {
   speciesCategory.textContent = speciesItem.category;
   speciesName.textContent = speciesItem.name;
   speciesScientificName.textContent = speciesItem.scientificName;
+
+  /*위도 표시*/
+  const oldLatitude = document.querySelector("#species-latitude");
+
+  if (oldLatitude) {
+    oldLatitude.remove();
+  }
+
+  const latitude = document.createElement("p");
+  latitude.id = "species-latitude";
+  latitude.className = "species-latitude";
+
+  latitude.textContent = speciesItem.latitude
+    ? `生息緯度：${speciesItem.latitude}`
+    : "生息緯度：資料未登録";
+
+  speciesScientificName.insertAdjacentElement(
+    "afterend",
+    latitude
+  );
+
   speciesDescription.textContent = speciesItem.description;
   speciesModal.classList.add("is-open");
   speciesModal.setAttribute("aria-hidden", "false");

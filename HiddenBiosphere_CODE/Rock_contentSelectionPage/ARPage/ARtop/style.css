@@ -1,3 +1,4 @@
+
 /*기본 설정*/
 * {
   box-sizing: border-box;
@@ -95,7 +96,7 @@ canvas {
   transform: translateY(0);
 }
 
-/* 닫기 버튼 */
+/*설명창 닫기 버튼*/
 .info-close {
   position: absolute;
   top: 14px;
@@ -116,8 +117,7 @@ canvas {
   transform: scale(0.94);
 }
 
-/* 설명 텍스트 */
-
+/*설명창 텍스트*/
 .info-category {
   margin: 0 44px 8px 0;
   color: #527065;
@@ -158,7 +158,10 @@ canvas {
   visibility: hidden;
   pointer-events: none;
   transform: translateX(18px);
-  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
   touch-action: manipulation;
 }
 
@@ -188,7 +191,10 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: calc(14px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));
+  padding:
+    calc(14px + env(safe-area-inset-top))
+    12px
+    calc(14px + env(safe-area-inset-bottom));
   background: rgba(0, 0, 0, 0.58);
   opacity: 0;
   visibility: hidden;
@@ -219,8 +225,7 @@ canvas {
   transition: transform 0.2s ease;
 }
 
-.encyclopedia-modal.is-open
-.encyclopedia-book {
+.encyclopedia-modal.is-open .encyclopedia-book {
   transform: scale(1);
 }
 
@@ -250,24 +255,33 @@ canvas {
   opacity: 0.75;
 }
 
+
 /*도감 상단 제목*/
 .encyclopedia-header {
+  position: relative;
+  flex: 0 0 auto;
   min-height: 150px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
-  gap: 10px;
   margin-bottom: 20px;
 }
 
+/*도감 제목 영역*/
 .encyclopedia-heading {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
   display: flex;
   align-items: flex-end;
   gap: 5px;
   margin-left: 10px;
+  max-width: 100%;
 }
 
+/*도감 작은 제목*/
 .encyclopedia-heading p {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 18px;
   font-weight: 700;
@@ -275,45 +289,58 @@ canvas {
   white-space: pre-line;
 }
 
+/*도감 큰 제목*/
 .encyclopedia-heading h2 {
+  flex: 0 0 auto;
   margin: 0;
   font-size: 42px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
 }
 
 /*도감 상단 생물 장식*/
 .encyclopedia-symbol {
-  flex: 0 0 140px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
   width: 140px;
   height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
 }
 
+/*장식 이미지 기본 설정*/
 .encyclopedia-symbol img {
   display: block;
   width: 150px;
   height: auto;
   max-width: none;
   object-fit: contain;
-  transform: translateY(-10px) scale(1);
+  flex-shrink: 0;
 }
 
-/* 유충 이미지는 처음에는 숨김 */
-.encyclopedia-symbol.larva {
-  display: none;
-}
-
-/* JS에서 선택되지 않은 그림 숨김 */
+/*선택되지 않은 장식 숨김*/
 .encyclopedia-symbol.is-hidden {
   display: none;
 }
 
-/* larva가 선택되면 표시 */
-.encyclopedia-symbol.larva:not(.is-hidden) {
-  display: flex;
+/*바위 위: 달팽이*/
+.encyclopedia-symbol.snail img {
+  transform: translate(-30px, -30px) scale(1);
+}
+
+/*바위 위: 이끼*/
+.encyclopedia-symbol.moss img {
+  transform: translate(0px, 0px) scale(1);
+}
+
+/*바위 위: 톡토기*/
+.encyclopedia-symbol.toktok img {
+  transform: translate(-30px, -10px) scale(1);
 }
 
 /*도감 생물 카드 2×2*/
@@ -405,7 +432,10 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    20px
+    calc(20px + env(safe-area-inset-bottom));
   background: rgba(0, 0, 0, 0.62);
   opacity: 0;
   visibility: hidden;
@@ -433,8 +463,7 @@ canvas {
   transition: transform 0.2s ease;
 }
 
-.species-modal.is-open
-.species-card {
+.species-modal.is-open .species-card {
   transform: scale(1);
 }
 
@@ -487,6 +516,15 @@ canvas {
   line-height: 1.4;
 }
 
+/*바위 위 생물 서식 위도*/
+.species-latitude {
+  margin: 0 0 18px;
+  color: #435d54;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
 .species-description {
   margin: 0;
   font-size: 15px;
@@ -517,7 +555,6 @@ canvas {
   }
 
   .encyclopedia-symbol {
-    flex-basis: 104px;
     width: 104px;
     height: 123px;
   }
@@ -571,7 +608,6 @@ canvas {
   transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-/* 중앙 조준 영역 */
 .touch-guide-frame {
   position: absolute;
   top: 50%;
@@ -581,7 +617,6 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
-/* 네 모서리 */
 .touch-guide-corner {
   position: absolute;
   width: 28px;
@@ -619,7 +654,6 @@ canvas {
   border-radius: 0 0 8px 0;
 }
 
-/* 중앙 작은 점 */
 .touch-guide-center {
   position: absolute;
   top: 50%;
@@ -632,7 +666,6 @@ canvas {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
-/* 안내 문구 */
 .touch-guide-text {
   position: absolute;
   left: 50%;
@@ -654,15 +687,4 @@ canvas {
 .touch-guide.is-hidden {
   opacity: 0;
   visibility: hidden;
-}
-
-/*Rock Top 도감 장식 그래픽*/
-.encyclopedia-symbol.is-hidden {
-  display: none !important;
-}
-
-.encyclopedia-symbol.snail:not(.is-hidden),
-.encyclopedia-symbol.moss:not(.is-hidden),
-.encyclopedia-symbol.toktok:not(.is-hidden) {
-  display: flex;
 }
