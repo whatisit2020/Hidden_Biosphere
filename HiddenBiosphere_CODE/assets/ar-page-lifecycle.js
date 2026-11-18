@@ -1,17 +1,9 @@
+
 (() => {
   "use strict";
 
-  const RELOAD_FLAG = "hidden-biosphere-ar-reload";
   let leaving = false;
-
-  const navigation = performance.getEntriesByType("navigation")[0];
-  const isReload = navigation && navigation.type === "reload";
-
-  if (!isReload) {
-    window.location.reload();
-    return;
-  }
-
+  
   function stopCamera() {
     document.querySelectorAll("video").forEach((video) => {
       const stream = video.srcObject;
@@ -37,7 +29,7 @@
     }, 200);
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function initializeBackButton() {
     const backButton = document.querySelector("a.back");
 
     if (!backButton) return;
@@ -48,7 +40,8 @@
         event.metaKey ||
         event.ctrlKey ||
         event.shiftKey ||
-        event.altKey
+        event.altKey ||
+        event.button > 0
       ) {
         return;
       }
@@ -56,13 +49,32 @@
       event.preventDefault();
       leaveARPage(backButton.href);
     });
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeBackButton
+    );
+  } else {
+    initializeBackButton();
+  }
 
   window.addEventListener("pagehide", stopCamera);
 
   window.addEventListener("pageshow", (event) => {
-    if (event.persisted) {
-      window.location.reload();
+    if (!event.persisted) return;
+
+    const key =
+      "hb-ar-entry-reload:" +
+      window.location.pathname;
+
+    try {
+      sessionStorage.setItem(key, String(Date.now()));
+    } catch (error) {
+      console.warn("Session storage unavailable", error);
     }
+
+    window.location.reload();
   });
 })();
