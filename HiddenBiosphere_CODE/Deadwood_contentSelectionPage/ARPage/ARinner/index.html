@@ -342,6 +342,7 @@
 
   <script src="./script.js"></script>
   
+
 <script>
 (function () {
   const panel = document.createElement("div");
@@ -371,23 +372,18 @@
   }
 
   log("진단 시작");
-const marker = document.querySelector("#deadwood-marker");
 
-setInterval(() => {
-  if (marker) {
-    log(
-      "NFT 상태: " +
-      (marker.object3D.visible ? "표시 상태" : "비표시 상태")
-    );
-  }
-}, 5000);
+  // NFT 데이터 로딩 확인
   window.addEventListener("arjs-nft-loaded", () => {
     log("NFT 데이터 로딩 완료");
   });
 
+  // NFT 마커 확인
   const marker = document.querySelector("#deadwood-marker");
 
   if (marker) {
+    log("NFT 마커 요소 확인");
+
     marker.addEventListener("markerFound", () => {
       log("NFT 마커 인식 성공");
     });
@@ -395,10 +391,20 @@ setInterval(() => {
     marker.addEventListener("markerLost", () => {
       log("NFT 마커 인식 해제");
     });
+
+    // 5초마다 NFT 표시 상태 확인
+    setInterval(() => {
+      log(
+        "NFT 상태: " +
+        (marker.object3D.visible ? "표시 상태" : "비표시 상태")
+      );
+    }, 5000);
+
   } else {
     log("오류: NFT 마커 요소 없음");
   }
 
+  // 3D 모델 로딩 확인
   document.querySelectorAll("[gltf-model]").forEach(model => {
     const id = model.id || "이름 없는 모델";
 
@@ -412,6 +418,7 @@ setInterval(() => {
     });
   });
 
+  // JavaScript 오류 확인
   window.addEventListener("error", event => {
     log("JS 오류: " + event.message);
   });
@@ -425,6 +432,7 @@ setInterval(() => {
   }, 20000);
 })();
 </script>
+
 
 </body>
 </html>
