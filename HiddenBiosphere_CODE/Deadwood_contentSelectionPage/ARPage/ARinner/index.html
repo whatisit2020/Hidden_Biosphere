@@ -2,6 +2,41 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <script>
+    (() => {
+      const eventName = "arjs-video-loaded";
+      const addListener = window.addEventListener;
+      let readyEvent = null;
+    
+      addListener.call(window, eventName, event => {
+        readyEvent = event;
+      });
+    
+      window.addEventListener = function (type, listener, options) {
+        const event = readyEvent;
+        const video = event?.detail?.component;
+    
+        if (
+          this === window &&
+          type === eventName &&
+          typeof listener === "function" &&
+          video?.id === "arjs-video" &&
+          video.isConnected &&
+          video.srcObject &&
+          !options?.signal?.aborted
+        ) {
+          queueMicrotask(() => {
+            if (video.isConnected && !options?.signal?.aborted) {
+              listener.call(window, event);
+            }
+          });
+          return;
+        }
+    
+        return addListener.call(this, type, listener, options);
+      };
+    })();
+  </script>
 
   <meta
     name="viewport"
